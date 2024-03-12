@@ -28,6 +28,7 @@ export default function AuthContextProvider({ children }) {
 
   const logout = () => {
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
 
     setUser({});
     setIsLoggedIn(false);

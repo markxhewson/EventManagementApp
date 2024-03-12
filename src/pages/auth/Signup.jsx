@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const Signup = () => {
-    const navigation = useNavigate();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         username: '',
@@ -19,6 +19,21 @@ const Signup = () => {
         setFormData({ ...formData, [name]: value });
     };
 
+    const handlePhoneChange = (e) => {
+        const { value } = e.target;
+        let formattedPhone = value.replace(/\s/g, '');
+
+        // remove all chars
+        formattedPhone = formattedPhone.replace(/\D/g, '');
+
+        // if the first character is not +, insert it to the start
+        if (formattedPhone.charAt(0) !== '+') {
+            formattedPhone = '+' + formattedPhone;
+        }
+
+        setFormData({ ...formData, phone: formattedPhone });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -27,7 +42,6 @@ const Signup = () => {
             return;
         }
 
-        console.log(getPasswordStrength(formData.password));
         if (!getPasswordStrength(formData.password)) {
             alert('Password does not meet the requirements');
             return;
@@ -41,14 +55,13 @@ const Signup = () => {
                 }
 
                 if (data.error) {
-                    console.log("hey")
-                    console.log(data)
                     alert(data.error);
                     return;
                 }
 
                 alert('Registered successfully');
-                navigation('/login');
+
+                navigate('/verification', { state: { signupVerification: true } });
             })
     };
 
@@ -87,6 +100,7 @@ const Signup = () => {
                 </div>
                 <div className="mb-4 relative">
                     <label className="block text-gray-700">Password</label>
+                    <label className="block text-gray-400 text-sm">ex. securePassword123!</label>
                     <input
                         type="password"
                         name="password"
@@ -96,7 +110,7 @@ const Signup = () => {
                         className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md"
                         required
                     />
-                    <div className="absolute inset-y-0 right-0 top-[27px] flex items-center pr-3">
+                    <div className="absolute inset-y-0 right-0 top-[48px] flex items-center pr-3">
                         {getPasswordStrength(formData.password) ? (
                             <FaCheckCircle className="text-green-500" />
                         ) : (
@@ -105,47 +119,51 @@ const Signup = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col mb-4 text-sm">
-                    <h3 className="flex items-center">
-                        {hasOneLowerCase(formData.password) ? (
-                            <><FaCheckCircle className="text-green-500 mr-2" /><div className="text-green-500 mr-2">At least one lowercase letter</div></>
-                        ) : (
-                            <><FaTimesCircle className="text-red-500 mr-2" /><div className="text-red-500 mr-2">At least one lowercase letter</div></>
-                        )}
-                    </h3>
-                    <h3 className="flex items-center">
-                        {hasOneUpperCase(formData.password) ? (
-                            <><FaCheckCircle className="text-green-500 mr-2" /><div className="text-green-500 mr-2">At least one uppercase letter</div></>
-                        ) : (
-                            <><FaTimesCircle className="text-red-500 mr-2" /><div className="text-red-500 mr-2">At least one uppercase letter</div></>
-                        )}
-                    </h3>
-                    <h3 className="flex items-center">
-                        {hasOneNumber(formData.password) ? (
-                            <><FaCheckCircle className="text-green-500 mr-2" /><div className="text-green-500 mr-2">At least one number</div></>
-                        ) : (
-                            <><FaTimesCircle className="text-red-500 mr-2" /><div className="text-red-500 mr-2">At least one number</div></>
-                        )}
-                    </h3>
-                    <h3 className="flex items-center">
-                        {hasOneSpecialCharacter(formData.password) ? (
-                            <><FaCheckCircle className="text-green-500 mr-2" /><div className="text-green-500 mr-2">At least one special character</div></>
-                        ) : (
-                            <><FaTimesCircle className="text-red-500 mr-2" /><div className="text-red-500 mr-2">At least one special character</div></>
-                        )}
-                    </h3>
-                    <h3 className="flex items-center">
-                        {hasMinimumLength(formData.password) ? (
-                            <><FaCheckCircle className="text-green-500 mr-2" /><div className="text-green-500 mr-2">Minimum of 8 characters</div></>
-                        ) : (
-                            <><FaTimesCircle className="text-red-500 mr-2" /><div className="text-red-500 mr-2">Minimum of 8 characters</div></>
-                        )}
-                    </h3>
+                <div className="flex flex-row mb-4 text-[13px]">
+                    <div className="flex flex-col">
+                        <h3 className="flex items-center">
+                            {hasOneLowerCase(formData.password) ? (
+                                <><FaCheckCircle className="text-green-500 mr-2" /><div className="text-green-500 mr-2">At least one lowercase letter</div></>
+                            ) : (
+                                <><FaTimesCircle className="text-red-500 mr-2" /><div className="text-red-500 mr-2">At least one lowercase letter</div></>
+                            )}
+                        </h3>
+                        <h3 className="flex items-center">
+                            {hasOneUpperCase(formData.password) ? (
+                                <><FaCheckCircle className="text-green-500 mr-2" /><div className="text-green-500 mr-2">At least one uppercase letter</div></>
+                            ) : (
+                                <><FaTimesCircle className="text-red-500 mr-2" /><div className="text-red-500 mr-2">At least one uppercase letter</div></>
+                            )}
+                        </h3>
+                        <h3 className="flex items-center">
+                            {hasOneNumber(formData.password) ? (
+                                <><FaCheckCircle className="text-green-500 mr-2" /><div className="text-green-500 mr-2">At least one number</div></>
+                            ) : (
+                                <><FaTimesCircle className="text-red-500 mr-2" /><div className="text-red-500 mr-2">At least one number</div></>
+                            )}
+                        </h3>
+                    </div>
+                    <div className="flex flex-col ml-4">
+                        <h3 className="flex items-center">
+                            {hasOneSpecialCharacter(formData.password) ? (
+                                <><FaCheckCircle className="text-green-500 mr-2" /><div className="text-green-500 mr-2">At least one special character</div></>
+                            ) : (
+                                <><FaTimesCircle className="text-red-500 mr-2" /><div className="text-red-500 mr-2">At least one special character</div></>
+                            )}
+                        </h3>
+                        <h3 className="flex items-center">
+                            {hasMinimumLength(formData.password) ? (
+                                <><FaCheckCircle className="text-green-500 mr-2" /><div className="text-green-500 mr-2">Minimum of 8 characters</div></>
+                            ) : (
+                                <><FaTimesCircle className="text-red-500 mr-2" /><div className="text-red-500 mr-2">Minimum of 8 characters</div></>
+                            )}
+                        </h3>
+                    </div>
                 </div>
 
 
                 <div className="mb-4">
-                <label className="block text-gray-700">Email Address</label>
+                    <label className="block text-gray-700">Email Address</label>
                     <input
                         type="email"
                         name="email"
@@ -163,7 +181,7 @@ const Signup = () => {
                         type="tel"
                         name="phone"
                         value={formData.phone}
-                        onChange={handleChange}
+                        onChange={handlePhoneChange}
                         placeholder="Phone"
                         className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md"
                         required

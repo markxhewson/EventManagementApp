@@ -6,8 +6,12 @@ import Signup from "./pages/auth/Signup"
 import Login from "./pages/auth/Login"
 import { useEffect } from "react"
 import AccountDetailsPage from "./pages/account/AccountDetailsPage"
+import Verification from "./pages/auth/Verification"
+import { useAuthContext } from "./context/AuthContext"
 
 function App() {
+    const { user } = useAuthContext();
+
     useEffect(() => {
         const handleVisibilityChange = () => {
             document.title = document.hidden ? "Come back :(" : "Event Bloom";
@@ -21,14 +25,17 @@ function App() {
     }, []);
 
     return (
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="default-signup" element={<DefaultSignup />} />
-            <Route path="signup" element={<Signup />} />
-            <Route path="login" element={<Login />} />
-            <Route path="account" element={<AccountDetailsPage />} />
-            <Route path="*" element={<PageNotFound />} />
-        </Routes>
+        <>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="default-signup" element={<DefaultSignup />} />
+                <Route path="signup" element={<Signup />} />
+                <Route path="login" element={<Login />} />
+                <Route path="account" element={<AccountDetailsPage />} />
+                <Route path="verification" element={<Verification />} />
+                <Route path="*" element={<PageNotFound />} />
+            </Routes>
+        </>
     )
 }
 
