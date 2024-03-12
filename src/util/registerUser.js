@@ -8,12 +8,18 @@ const registerUser = async (formData) => {
             },
             body: JSON.stringify(formData)
         });
-    
-        if (!data.ok) {
-            return null;
+
+        const response = await data.json();
+
+        if (data.ok) {
+            return response;
+        } else {
+            if (response.error) {
+                return response;
+            } else {
+                return null;
+            }
         }
-    
-        return await data.json();
     } catch (exception) {
         return null;
     }
