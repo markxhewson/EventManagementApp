@@ -5,6 +5,7 @@ import DefaultSignup from "./pages/auth/DefaultSignup"
 import Signup from "./pages/auth/Signup"
 import Login from "./pages/auth/Login"
 import { useEffect } from "react"
+import AccountDetailsPage from "./pages/account/AccountDetailsPage"
 
 function App() {
     useEffect(() => {
@@ -25,6 +26,7 @@ function App() {
             <Route path="default-signup" element={<DefaultSignup />} />
             <Route path="signup" element={<Signup />} />
             <Route path="login" element={<Login />} />
+            <Route path="account" element={<AccountDetailsPage />} />
             <Route path="*" element={<PageNotFound />} />
         </Routes>
     )

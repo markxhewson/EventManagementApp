@@ -22,15 +22,15 @@ export default function AuthContextProvider({ children }) {
   const login = (user) => {
     localStorage.setItem('user', JSON.stringify(user));
 
-    setIsLoggedIn(true);
     setUser(user);
+    setIsLoggedIn(true);
   };
 
   const logout = () => {
     localStorage.removeItem('user');
 
-    setIsLoggedIn(false);
     setUser({});
+    setIsLoggedIn(false);
   };
 
   return (
