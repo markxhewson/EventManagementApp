@@ -1,6 +1,6 @@
 const verifyToken = async (token) => {
     try {
-        const response = await fetch(`http://81.0.246.142:3001/auth/verify`, {
+        const response = await fetch(`/api/auth/verify`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

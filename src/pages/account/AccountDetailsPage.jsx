@@ -33,7 +33,7 @@ const AccountDetailsPage = () => {
     }, [user]);
 
     const handleUpdate = async () => {
-        const data = await fetch('http://81.0.246.142:3001/users/' + user.id, {
+        const data = await fetch('/api/users/' + user.id, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

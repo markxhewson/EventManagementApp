@@ -35,7 +35,7 @@ const Login = () => {
             if (data.user.twoFactorAuth) {
                 navigate('/verification', { state: { signupVerification: false } });
                 
-                await fetch('http://81.0.246.142:3001/auth/send-code', {
+                await fetch('/api/auth/send-code', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

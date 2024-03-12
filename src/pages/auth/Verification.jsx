@@ -31,7 +31,7 @@ const Verification = () => {
         e.preventDefault();
         const code = verificationCodes.join('');
 
-        const data = await fetch('http://81.0.246.142:3001/auth/verify-code', {
+        const data = await fetch('/api/auth/verify-code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

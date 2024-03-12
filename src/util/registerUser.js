@@ -1,6 +1,6 @@
 const registerUser = async (formData) => {
     try {
-        const data = await fetch(`http://81.0.246.142:3001/auth/register`, {
+        const data = await fetch(`/api/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
