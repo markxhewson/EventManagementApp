@@ -8,6 +8,7 @@ import { useEffect } from "react"
 import AccountDetailsPage from "./pages/account/AccountDetailsPage"
 import Verification from "./pages/auth/Verification"
 import { useAuthContext } from "./context/AuthContext"
+import ManageEvents from "./pages/manage-events/ManageEvents"
 
 function App() {
     const { isLoggedIn } = useAuthContext();
@@ -33,6 +34,7 @@ function App() {
                             <Route path="/" element={<Home />} />
                             <Route path="/account" element={<AccountDetailsPage />} />
                             <Route path="/verification" element={<Verification />} />
+                            <Route path='/manage-events' element={<ManageEvents />} />
                             {/* <Route path="*" element={<PageNotFound />} /> */}
                             <Route path="/*" element={<Navigate to="/" />} />
                         </>
