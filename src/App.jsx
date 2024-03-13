@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes } from "react-router-dom"
 import Home from "./pages/Home"
 import PageNotFound from "./pages/error/PageNotFound"
 import DefaultSignup from "./pages/auth/DefaultSignup"
@@ -10,7 +10,7 @@ import Verification from "./pages/auth/Verification"
 import { useAuthContext } from "./context/AuthContext"
 
 function App() {
-    const { user } = useAuthContext();
+    const { isLoggedIn } = useAuthContext();
 
     useEffect(() => {
         const handleVisibilityChange = () => {
@@ -27,13 +27,26 @@ function App() {
     return (
         <>
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="default-signup" element={<DefaultSignup />} />
-                <Route path="signup" element={<Signup />} />
-                <Route path="login" element={<Login />} />
-                <Route path="account" element={<AccountDetailsPage />} />
-                <Route path="verification" element={<Verification />} />
-                <Route path="*" element={<PageNotFound />} />
+                {
+                    isLoggedIn ? (
+                        <>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/account" element={<AccountDetailsPage />} />
+                            <Route path="/verification" element={<Verification />} />
+                            {/* <Route path="*" element={<PageNotFound />} /> */}
+                            <Route path="/*" element={<Navigate to="/" />} />
+                        </>
+                    ) : (
+                        <>
+                            <Route path="/landing" element={<DefaultSignup />} />
+                            <Route path="/signup" element={<Signup />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/verification" element={<Verification />} />
+                            {/* <Route path="*" element={<PageNotFound />} /> */}
+                            <Route path="/*" element={<Navigate to="/landing" />} />
+                        </>
+                    )
+                }
             </Routes>
         </>
     )
