@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import registerUser from "../../util/registerUser";
 import { Link } from 'react-router-dom';
@@ -7,17 +7,52 @@ import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 const Signup = () => {
     const navigate = useNavigate();
 
+    const [interests, setInterests] = useState([]);
     const [formData, setFormData] = useState({
         username: '',
         password: '',
         email: '',
         phone: '',
-        type: ''
+        type: '',
+        interests: []
     });
+
+    useEffect(() => {
+        const fetchInterests = async () => {
+            const data = await fetch('/api/interests', {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75"
+                }
+            });
+
+            if (!data.ok) {
+                alert('An error occurred. Please try again later');
+                return;
+            }
+
+            const response = await data.json();
+            setInterests(response);
+        };
+
+        fetchInterests();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+    };
+
+    const addInterestToFormData = (e) => {
+        const { name, checked } = e.target;
+        if (checked) {
+            console.log('added interest ', name)
+            setFormData({ ...formData, interests: [...formData.interests, name] });
+        } else {
+            console.log('removed interest ', name)
+            setFormData({ ...formData, interests: formData.interests.filter(interest => interest !== name) });
+        }
     };
 
     const handlePhoneChange = (e) => {
@@ -202,7 +237,7 @@ const Signup = () => {
                 {/* using similar styling, ask the user if they want their verification code through email or sms with a slider*/}
                 <div className="mb-6">
                     <label className="block text-gray-700">Receive Verification Code</label>
-                    <label className="block text-gray-400 text-sm">Choose how you want to receive your verification code</label>
+                    <label className="block text-gray-400 text-sm pb-1">Choose how you want to receive your verification code</label>
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
                             <input type="radio" id="email" name="verification" value="email" className="form-radio" onChange={handleVerificationTypeChange} />
@@ -212,6 +247,18 @@ const Signup = () => {
                             <input type="radio" id="sms" name="verification" value="sms" className="form-radio" onChange={handleVerificationTypeChange} />
                             <label htmlFor="sms">SMS</label>
                         </div>
+                    </div>
+                </div>
+                <div className="mb-6">
+                    <label className="block text-gray-700">Your Interests</label>
+                    <label className="block text-gray-400 text-sm pb-1">Choose the areas you are interested in</label>
+                    <div className="flex flex-wrap items-start gap-2">
+                        {interests.map((interest) => (
+                            <div key={interest.id} className="flex items-center gap-2 text-[12px]">
+                                <input type="checkbox" id={interest.id} name={interest.name} value={interest.name} className="form-checkbox" onChange={addInterestToFormData} />
+                                <label htmlFor={interest.id}>{interest.name}</label>
+                            </div>
+                        ))}
                     </div>
                 </div>
                 <div className="flex justify-between">
