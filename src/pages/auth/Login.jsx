@@ -6,9 +6,10 @@ import { Link, useNavigate } from 'react-router-dom';
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [verificationType, setVerificationType] = useState('email');
     
     const navigate = useNavigate();
-    const { login } = useAuthContext();
+    const { user, login } = useAuthContext();
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -41,7 +42,7 @@ const Login = () => {
                         'Content-Type': 'application/json',
                         'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75"
                     },
-                    body: JSON.stringify({ userId: data.user.id })
+                    body: JSON.stringify({ userId: data.user.id, type: verificationType })
                 });
 
                 return;

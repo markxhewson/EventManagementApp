@@ -8,6 +8,7 @@ const AccountDetailsPage = () => {
     const [emailNotifications, setEmailNotifications] = useState(0);
     const [smsNotifications, setSmsNotifications] = useState(0);
     const [twoFactorAuth, setTwoFactorAuth] = useState(0);
+    const [preferredAuth, setPreferredAuth] = useState('');
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -22,8 +23,7 @@ const AccountDetailsPage = () => {
             setEmailNotifications(Number(user.emailNotifications) || 0);
             setSmsNotifications(Number(user.smsNotifications) || 0);
             setTwoFactorAuth(Number(user.twoFactorAuth) || 0);
-
-            console.log(user)
+            setPreferredAuth(user.preferredAuth || '');
 
             setUsername(user.username || '');
             setEmail(user.email || '');
@@ -46,7 +46,8 @@ const AccountDetailsPage = () => {
                 phone: phoneNumber,
                 emailNotifications: emailNotifications,
                 smsNotifications: smsNotifications,
-                twoFactorAuth: twoFactorAuth
+                twoFactorAuth: twoFactorAuth,
+                preferredAuth: preferredAuth,
             }),
         });
 
@@ -86,6 +87,36 @@ const AccountDetailsPage = () => {
                             <Tooltip id="my-tooltip" />
                             <AiFillInfoCircle data-tooltip-id="my-tooltip" data-tooltip-content="Logging in requires users to verify their identity via email or phone for security." className="text-2xl ml-2" />
                         </div>
+                        <div className="mt-4">
+                            <label className="block text-gray-700">Preferred Authentication Method</label>
+                            <div className="flex items-center gap-4 mt-1">
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="radio"
+                                        id="email"
+                                        name="verification"
+                                        value="email"
+                                        className="form-radio"
+                                        onChange={(e) => setPreferredAuth(e.target.value)}
+                                        checked={preferredAuth === 'email' || preferredAuth === ''}
+                                    />
+                                    <label htmlFor="email">Email</label>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="radio"
+                                        id="sms"
+                                        name="verification"
+                                        value="sms"
+                                        className="form-radio"
+                                        onChange={(e) => setPreferredAuth(e.target.value)}
+                                        checked={preferredAuth === 'sms' || preferredAuth === ''}
+                                    />
+                                    <label htmlFor="sms">SMS</label>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700">Username</label>

@@ -11,7 +11,8 @@ const Signup = () => {
         username: '',
         password: '',
         email: '',
-        phone: ''
+        phone: '',
+        type: ''
     });
 
     const handleChange = (e) => {
@@ -34,6 +35,12 @@ const Signup = () => {
         setFormData({ ...formData, phone: formattedPhone });
     };
 
+    const handleVerificationTypeChange = (e) => {
+        // Update the type property in formData based on the selected verification option
+        const { value } = e.target;
+        setFormData({ ...formData, type: value });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -44,6 +51,11 @@ const Signup = () => {
 
         if (!getPasswordStrength(formData.password)) {
             alert('Password does not meet the requirements');
+            return;
+        }
+
+        if (!formData.type) {
+            alert('Please select how you want to receive your verification code');
             return;
         }
 
@@ -186,6 +198,21 @@ const Signup = () => {
                         className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md"
                         required
                     />
+                </div>
+                {/* using similar styling, ask the user if they want their verification code through email or sms with a slider*/}
+                <div className="mb-6">
+                    <label className="block text-gray-700">Receive Verification Code</label>
+                    <label className="block text-gray-400 text-sm">Choose how you want to receive your verification code</label>
+                    <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
+                            <input type="radio" id="email" name="verification" value="email" className="form-radio" onChange={handleVerificationTypeChange} />
+                            <label htmlFor="email">Email</label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <input type="radio" id="sms" name="verification" value="sms" className="form-radio" onChange={handleVerificationTypeChange} />
+                            <label htmlFor="sms">SMS</label>
+                        </div>
+                    </div>
                 </div>
                 <div className="flex justify-between">
                     <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-24" onClick={handleSubmit}>Sign Up</button>
