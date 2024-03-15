@@ -9,6 +9,8 @@ import AccountDetailsPage from "./pages/account/AccountDetailsPage"
 import Verification from "./pages/auth/Verification"
 import { useAuthContext } from "./context/AuthContext"
 import ManageEvents from "./pages/manage-events/ManageEvents"
+import OrganiserSignup from "./pages/auth/OrganiserSignup"
+import OrganiserApplications from "./pages/manage-events/OrganiserApplications"
 
 function App() {
     const { isLoggedIn } = useAuthContext();
@@ -35,6 +37,8 @@ function App() {
                             <Route path="/account" element={<AccountDetailsPage />} />
                             <Route path="/verification" element={<Verification />} />
                             <Route path='/manage-events' element={<ManageEvents />} />
+                            <Route path='/organiser-signup' element={<OrganiserSignup />} />
+                            <Route path='/organiser-applications' element={<OrganiserApplications />} />
                             {/* <Route path="*" element={<PageNotFound />} /> */}
                             <Route path="/*" element={<Navigate to="/" />} />
                         </>
