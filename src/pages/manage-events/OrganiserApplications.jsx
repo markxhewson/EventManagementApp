@@ -45,6 +45,8 @@ const OrganiserApplications = () => {
 
         const response = await data.json();
         alert(response.message);
+
+        setApplications(applications.filter(app => app.id !== id));
     };
 
     return (

@@ -64,96 +64,102 @@ const AccountDetailsPage = () => {
     };
 
     return (
-        <div className='px-5 md:px-24 py-10'>
+        <div className='px-5 md:px-24 py-10 h-screen'>
             <Navbar />
 
-            <div className="flex flex-col justify-center items-center h-screen">
-                <div className="max-w-md w-full mx-auto p-6 bg-white rounded-lg shadow-md">
+            <div className="flex flex-col justify-center items-center mt-6">
+                <div className="max-w-2xl w-full mx-auto p-6 bg-white rounded-lg shadow-md">
                     <h1 className="text-2xl font-semibold">Your Account Details</h1>
                     <h1 className='text-base text-gray-700 mb-6'>Update your account here</h1>
-                    <form onSubmit={(e) => e.preventDefault()}>
-                        <div className='mb-4 flex flex-col'>
-                            <label className="block text-gray-700">Notifications</label>
-                            <div className="flex flex-row p-2">
-                                <label className='text-gray-700'>Email</label>
-                                <input type="range" min="0" max="1" value={emailNotifications} onChange={(e) => setEmailNotifications(parseInt(e.target.value))} className="w-12 ml-4" />
+                    <form className="flex flex-row gap-8" onSubmit={(e) => e.preventDefault()}>
+                        <div className='w-80'>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Username</label>
+                                <input type="text" className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md" placeholder="Enter Username" value={username} onChange={(e) => setUsername(e.target.value)} />
                             </div>
-                            <div className="flex flex-row p-2">
-                                <label className='text-gray-700'>SMS</label>
-                                <input type="range" min="0" max="1" value={smsNotifications} onChange={(e) => setSmsNotifications(parseInt(e.target.value))} className="w-12 ml-[21px]" />
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Email</label>
+                                <input type="email" className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md" placeholder="Enter Email Address" value={email} onChange={(e) => setEmail(e.target.value)} />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">New Password</label>
+                                <input type="password" className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md" placeholder="Enter a new password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Phone Number</label>
+                                <input type="tel" className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md" placeholder="Enter Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Role</label>
+                                <input
+                                    type="text"
+                                    className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md bg-gray-200 text-gray-600 cursor-not-allowed"
+                                    placeholder="Role of User"
+                                    value={role}
+                                    readOnly
+                                />
                             </div>
                         </div>
-                        <div className='mb-4 flex flex-col'>
-                            <label className="block text-gray-700">Security</label>
-                            <div className="flex flex-row p-2">
-                                <label className='text-gray-700'>2FA</label>
-                                <input type="range" min="0" max="1" value={twoFactorAuth} onChange={(e) => setTwoFactorAuth(parseInt(e.target.value))} className="w-12 ml-[25px]" />
-                                <Tooltip id="my-tooltip" />
-                                <AiFillInfoCircle data-tooltip-id="my-tooltip" data-tooltip-content="Logging in requires users to verify their identity via email or phone for security." className="text-2xl ml-2" />
-                            </div>
-                            <div className="mt-4">
-                                <label className="block text-gray-700">Preferred Authentication Method</label>
-                                <div className="flex items-center gap-4 mt-1 ml-[5px]">
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="radio"
-                                            id="email"
-                                            name="verification"
-                                            value="email"
-                                            className="form-radio"
-                                            onChange={(e) => setPreferredAuth(e.target.value)}
-                                            checked={preferredAuth === 'email' || preferredAuth === ''}
-                                        />
-                                        <label htmlFor="email">Email</label>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="radio"
-                                            id="sms"
-                                            name="verification"
-                                            value="sms"
-                                            className="form-radio"
-                                            onChange={(e) => setPreferredAuth(e.target.value)}
-                                            checked={preferredAuth === 'sms' || preferredAuth === ''}
-                                        />
-                                        <label htmlFor="sms">SMS</label>
-                                    </div>
+                        <div>
+                            <div className='mb-4 flex flex-col'>
+                                <label className="block text-gray-700">Notifications</label>
+                                <div className="flex flex-row p-2">
+                                    <label className='text-gray-700'>Email</label>
+                                    <input type="range" min="0" max="1" value={emailNotifications} onChange={(e) => setEmailNotifications(parseInt(e.target.value))} className="w-12 ml-4" />
+                                </div>
+                                <div className="flex flex-row p-2">
+                                    <label className='text-gray-700'>SMS</label>
+                                    <input type="range" min="0" max="1" value={smsNotifications} onChange={(e) => setSmsNotifications(parseInt(e.target.value))} className="w-12 ml-[21px]" />
                                 </div>
                             </div>
-
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Username</label>
-                            <input type="text" className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md" placeholder="Enter Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Email</label>
-                            <input type="email" className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md" placeholder="Enter Email Address" value={email} onChange={(e) => setEmail(e.target.value)} />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">New Password</label>
-                            <input type="password" className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md" placeholder="Enter a new password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Phone Number</label>
-                            <input type="tel" className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md" placeholder="Enter Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Role</label>
-                            <input
-                                type="text"
-                                className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md bg-gray-200 text-gray-600 cursor-not-allowed"
-                                placeholder="Role of User"
-                                value={role}
-                                readOnly
-                            />
-                        </div>
-
-                        <div className="flex justify-between">
-                            <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-24" onClick={handleUpdate}>Update</button>
-                            <Link to="/" type="submit" className="text-center bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 w-24">Back</Link>
+                            <div className='mb-4 flex flex-col'>
+                                <label className="block text-gray-700">Security</label>
+                                <div className="flex flex-row p-2">
+                                    <label className='text-gray-700'>2FA</label>
+                                    <input type="range" min="0" max="1" value={twoFactorAuth} onChange={(e) => setTwoFactorAuth(parseInt(e.target.value))} className="w-12 ml-[25px]" />
+                                    <Tooltip id="my-tooltip" />
+                                    <AiFillInfoCircle data-tooltip-id="my-tooltip" data-tooltip-content="Logging in requires users to verify their identity via email or phone for security." className="text-2xl ml-2" />
+                                </div>
+                                <div className="mt-4">
+                                    <label className="block text-gray-700">Preferred Authentication Method</label>
+                                    <div className="flex items-center gap-4 mt-1 ml-[5px]">
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="radio"
+                                                id="email"
+                                                name="verification"
+                                                value="email"
+                                                className="form-radio"
+                                                onChange={(e) => setPreferredAuth(e.target.value)}
+                                                checked={preferredAuth === 'email' || preferredAuth === ''}
+                                            />
+                                            <label htmlFor="email">Email</label>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="radio"
+                                                id="sms"
+                                                name="verification"
+                                                value="sms"
+                                                className="form-radio"
+                                                onChange={(e) => setPreferredAuth(e.target.value)}
+                                                checked={preferredAuth === 'sms' || preferredAuth === ''}
+                                            />
+                                            <label htmlFor="sms">SMS</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label className='mt-8 text-gray-700'>NOTICE</label>
+                                <div className=' max-w-[300px] text-gray-700 text-sm'>
+                                Your privacy is important to us. We collect minimal personal information solely for the purpose of providing and improving our services. We do not share your information with third parties without your consent. If you have any concerns or questions about our privacy practices, please contact us.
+                                </div>
+                            </div>
                         </div>
                     </form>
+                    <div className="flex justify-between mt-6">
+                        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-24" onClick={handleUpdate}>Update</button>
+                        <Link to="/" type="submit" className="text-center bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 w-24">Back</Link>
+                    </div>
                 </div>
             </div>
         </div>

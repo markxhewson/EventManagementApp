@@ -81,7 +81,7 @@ const Verification = () => {
         <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center h-screen text-gray-600">
             <div className="max-w-md w-full mx-auto p-6 bg-white rounded-lg shadow-md">
                 <h1 className="text-2xl font-semibold text-black">Verification</h1>
-                <h1 className="text-base text-gray-700 mb-6">Enter the code sent to your phone number during signup</h1>
+                <h1 className="text-base text-gray-700 mb-6">Enter the code sent to your preferred authentication method, it may take some time to receive the code.</h1>
                 <div className="flex items-center justify-center space-x-2 mb-4">
                     {verificationCodes.map((code, index) => (
                         <input
