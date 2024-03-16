@@ -118,7 +118,7 @@ const AccountDetailsPage = () => {
                                     <label className='text-gray-700'>2FA</label>
                                     <input type="range" min="0" max="1" value={twoFactorAuth} onChange={(e) => setTwoFactorAuth(parseInt(e.target.value))} className="w-12 ml-[25px]" />
                                     <Tooltip id="my-tooltip" />
-                                    <AiFillInfoCircle data-tooltip-id="my-tooltip" data-tooltip-content="Logging in requires users to verify their identity via email or phone for security." className="text-2xl ml-2" />
+                                    <AiFillInfoCircle data-tooltip-id="my-tooltip" data-tooltip-content="Logging in requires users to verify their identity via their preferred authentication method." className="text-2xl ml-2" />
                                 </div>
                                 <div className="mt-4">
                                     <label className="block text-gray-700">Preferred Authentication Method</label>
