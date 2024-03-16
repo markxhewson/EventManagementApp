@@ -3,6 +3,8 @@ import { useAuthContext } from "../context/AuthContext";
 import verifyToken from "../util/verifyToken";
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
+import Reviews from "../components/Reviews";
+import SearchBar from "../components/SearchBar";
 
 const Home = () => {
   const { isLoggedIn, user } = useAuthContext();
@@ -38,7 +40,14 @@ const Home = () => {
         </div>
       </div>
 
-      <Navbar />
+      <div className="px-5 md:px-24 py-10 h-screen">
+        <Navbar />
+        <SearchBar />
+
+        <div className="absolute bottom-[10px] left-[20px] w-[1200]">
+          <Reviews />
+        </div>
+      </div>
     </>
   );
 };

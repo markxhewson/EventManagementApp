@@ -11,6 +11,8 @@ import { useAuthContext } from "./context/AuthContext"
 import ManageEvents from "./pages/manage-events/ManageEvents"
 import OrganiserSignup from "./pages/auth/OrganiserSignup"
 import OrganiserApplications from "./pages/manage-events/OrganiserApplications"
+import Reviews from "./components/Reviews"
+import SearchBar from "./components/SearchBar"
 
 function App() {
     const { isLoggedIn } = useAuthContext();
