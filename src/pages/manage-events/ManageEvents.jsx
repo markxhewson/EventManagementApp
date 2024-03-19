@@ -101,7 +101,7 @@ function EventItem({ event }) {
     return (
         <div className='rounded-xl hover:scale-105 transition-transform cursor-pointer relative bg-neutral-800'>
             <img className='rounded-xl min-h-[200px] object-cover' src={image_url ?? "img_placeholder.jpg"} alt="Event" />
-            <div className='absolute bottom-0 left-0 w-full bg-black bg-opacity-25 px-4 py-2'>
+            <div className={`absolute bottom-0 left-0 w-full bg-black px-4 py-2 ${image_url ? 'bg-opacity-80' : 'bg-opacity-25'}`}>
                 <p className='text-white text-ellipsis text-nowrap overflow-hidden'>{ name }</p>
                 <p className='text-sm text-neutral-500 text-ellipsis text-nowrap overflow-hidden'>
                     { location }

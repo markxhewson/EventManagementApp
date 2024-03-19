@@ -9,19 +9,21 @@ const eventSchema = z.object({
     description: z.string().min(1).max(255),
     location: z.string().min(1).max(255),
     start_date: z.date({ coerce: true }),
-    end_date: z.date({ coerce: true })
+    end_date: z.date({ coerce: true }),
+    image: z.any()
 });
 
 const CreateEvent = ({ isOpen, onClose }) => {
 
-    const { control, handleSubmit } = useForm({
+    const { control, handleSubmit, register } = useForm({
         resolver: zodResolver(eventSchema),
         defaultValues: {
             name: '',
             description: '',
             location: '',
             start_date: '',
-            end_date: ''
+            end_date: '',
+            image: ''
         }
     })
 
@@ -30,13 +32,25 @@ const CreateEvent = ({ isOpen, onClose }) => {
             values.start_date = values.start_date.valueOf();
             values.end_date = values.end_date.valueOf();
 
+            // Construct multipart form data object for file upload
+            const formData  = new FormData();
+            for(const name in values) {
+                formData.append(name, values[name]);
+            }
+            // Set image field to the individual file instead of FileList object
+            if (values.image?.[0]) {
+                formData.append('image', values.image[0]);
+            }
+            else {
+                formData.delete('image');
+            }
+
             const resp = await fetch('/api/events', {
                 headers: {
-                    'Content-Type': 'application/json',
                     'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75"
                 },
                 method: 'POST',
-                body: JSON.stringify(values)
+                body: formData
             });
             if (!resp.ok) throw new Error();
             await onClose();
@@ -71,7 +85,13 @@ const CreateEvent = ({ isOpen, onClose }) => {
                         </div>
                         <div className='flex items-center justify-between gap-2 mt-4'>
                             <label className='text-gray-700 flex-shrink-0'>Image:</label>
-                            <input type="file" placeholder="Image" className="text-gray-700" />
+                            <input
+                                {...register('image')}
+                                type="file"
+                                accept="image/*"
+                                placeholder="Image"
+                                className="text-gray-700"
+                            />
                         </div>
 
                         <div className='flex justify-between mt-4'>
