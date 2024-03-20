@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { FaBan, FaClock, FaDownload, FaEdit, FaMap, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
 import EditEvent from "./EditEvent";
+import CancelEvent from "./CancelEvent";
 
 export default function ManageEventDetails() {
 
@@ -73,6 +74,26 @@ const EventHeader = ({ event, refresh }) => {
     const endTime = new Date(end_date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
 
     const [ showEdit, setShowEdit ] = useState(false);
+    const [ showCancel, setShowCancel ] = useState(false);
+
+    const updateEventStatus = async(status) => {
+        // Update event status
+        try {
+            const resp = await fetch(`/api/events/status/${event.id}`, {
+                headers: {
+                    'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75",
+                    'content-type': 'application/json'
+                },
+                method: 'PUT',
+                body: JSON.stringify({ status })
+            });
+            if (!resp.ok) throw new Error();
+            await refresh(event.id);
+        } catch(err) {
+            console.error(err);
+            alert('An error occurred. Please try again later.');
+        }
+    }
 
     return (
         <div className='flex flex-col lg:flex-row gap-y-5 lg:items-center p-10 m-12 lg:mx-24 flex-grow rounded-md bg-neutral-500/15 backdrop-blur-3xl'>
@@ -84,7 +105,7 @@ const EventHeader = ({ event, refresh }) => {
                 />
             </div>
             <div className='px-5 lg:px-10 flex-grow'>
-                <h1 className='text-white text-4xl font-semibold'>
+                <h1 className='text-white text-3xl font-semibold'>
                     { status !== 'cancelled' ? name : (
                         <span className='text-red-500 line-through'>&nbsp;{name}&nbsp;</span>
                     ) }
@@ -114,13 +135,18 @@ const EventHeader = ({ event, refresh }) => {
             </div>
             <ul className='lg:ms-auto flex flex-col gap-2 py-2 flex-shrink-0'>
                 <li>
-                    <button onClick={() => setShowEdit(true)} className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'>
+                    <button
+                        onClick={() => setShowEdit(true)}
+                        className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'
+                    >
                         <FaEdit className="me-3" />
                         Edit Details
                     </button>
                 </li>
                 <li>
-                    <button className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'>
+                    <button
+                        className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'
+                    >
                         <FaDownload className="me-3" />
                         Save registration list
                     </button>
@@ -128,7 +154,10 @@ const EventHeader = ({ event, refresh }) => {
                 {
                     status === 'active' && (
                         <li>
-                            <button className='text-red-500 flex items-center justify-center w-full py-2 px-4 rounded hover:bg-red-500 hover:text-black transition-colors duration-500'>
+                            <button
+                                onClick={() => updateEventStatus('paused')}
+                                className='text-red-500 flex items-center justify-center w-full py-2 px-4 rounded hover:bg-red-500 hover:text-black transition-colors duration-500'
+                            >
                                 <FaRegPauseCircle className="me-3 text-lg" />
                                 Pause registrations
                             </button>
@@ -138,7 +167,10 @@ const EventHeader = ({ event, refresh }) => {
                 {
                     status === 'paused' && (
                         <li>
-                            <button className='text-green-500 flex items-center justify-center w-full py-2 px-4 rounded hover:bg-green-500 hover:text-black transition-colors duration-500'>
+                            <button
+                                onClick={() => updateEventStatus('active')}
+                                className='text-green-500 flex items-center justify-center w-full py-2 px-4 rounded hover:bg-green-500 hover:text-black transition-colors duration-500'
+                            >
                                 <FaRegPlayCircle className="me-3 text-lg" />
                                 Resume registrations
                             </button>
@@ -148,7 +180,10 @@ const EventHeader = ({ event, refresh }) => {
                 {
                     status !== 'cancelled' && (
                         <li>
-                            <button className='text-red-500 flex items-center justify-center w-full py-2 px-4 rounded hover:bg-red-500 hover:text-black transition-colors duration-500'>
+                            <button
+                                onClick={() => setShowCancel(true)}
+                                className='text-red-500 flex items-center justify-center w-full py-2 px-4 rounded hover:bg-red-500 hover:text-black transition-colors duration-500'
+                            >
                                 <FaBan className="me-3 text-lg" />
                                 Cancel Event
                             </button>
@@ -163,6 +198,14 @@ const EventHeader = ({ event, refresh }) => {
                 onClose={async() => {
                     await refresh(event.id);
                     setShowEdit(false)
+                }}
+            />
+            <CancelEvent
+                event={event}
+                isOpen={showCancel}
+                onClose={async() => {
+                    await refresh(event.id);
+                    setShowCancel(false)
                 }}
             />
         </div>

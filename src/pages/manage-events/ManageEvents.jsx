@@ -7,19 +7,21 @@ import { Link } from "react-router-dom";
 export default function ManageEvents() {
 
     const [ events, setEvents ] = useState([]);
-    const [ past, upcoming ] = useMemo(() => {
+    const [ past, upcoming, cancelled ] = useMemo(() => {
         const past = [];
         const upcoming = [];
+        const cancelled = [];
 
         for (const e of events ?? []) {
-            if (e.start_date < Date.now()) past.push(e);
+            if (e.status === 'cancelled') cancelled.push(e);
+            else if (e.start_date < Date.now()) past.push(e);
             else upcoming.push(e);
         }
 
         past.sort((a, b) => b.start_date - a.start_date);
         upcoming.sort((a, b) => a.start_date - b.start_date);
 
-        return [ past, upcoming ];
+        return [ past, upcoming, cancelled ];
     }, [ events ]);
 
     useEffect(() => {
@@ -87,13 +89,25 @@ export default function ManageEvents() {
                     </>
                 )
             }
+            {
+                cancelled.length > 0 && (
+                    <>
+                        <h1 className='text-white text-3xl mb-3 mt-5'>CANCELLED EVENTS</h1>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-10">
+                            {
+                                cancelled.map((e) => <EventItem key={e.id} event={e} />)
+                            }
+                        </div>
+                    </>
+                )
+            }
         </div>
     )
 }
 
 function EventItem({ event }) {
 
-    const { id, name, image_url, start_date, end_date, location, views } = event;
+    const { id, name, image_url, start_date, end_date, location, views, status } = event;
 
     const date = new Date(start_date).toLocaleDateString();
     const startTime = new Date(start_date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
@@ -103,7 +117,7 @@ function EventItem({ event }) {
         <Link to={`/manage-events/${id}`} className='min-h-[200px] rounded-xl hover:scale-105 transition-transform cursor-pointer relative bg-neutral-800'>
             <img className='rounded-xl w-full h-full object-cover' src={image_url ?? "/img_placeholder.jpg"} alt="Event" />
             <div className={`absolute bottom-0 left-0 w-full bg-black px-4 py-2 ${image_url ? 'bg-opacity-80' : 'bg-opacity-25'}`}>
-                <p className='text-white text-ellipsis text-nowrap overflow-hidden'>{ name }</p>
+                <p className={`text-white text-ellipsis text-nowrap overflow-hidden${status === 'cancelled' ? ' line-through !text-red-500' : ''}`}>{ name }</p>
                 <p className='text-sm text-neutral-500 text-ellipsis text-nowrap overflow-hidden'>
                     { location }
                 </p>
