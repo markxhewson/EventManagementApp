@@ -5,21 +5,21 @@ const SearchBar = ({ onSearch }) => {
   // const [searchResults, setSearchResults] = useState([]);
 
   const handleSearch = async () => {
-        try {
-          const response = await fetch('http://81.0.246.142:3001', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'api-key': '43d44abf-qlgl-6322-jujw-3b3a9e711f75'
-            }
-          });
-          const data = await response.json();
-          onSearch(data);
-        } catch (error) {
-          console.error('Error searching for events:', error);
+    try {
+      const response = await fetch('http://81.0.246.142:3001', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': '43d44abf-qlgl-6322-jujw-3b3a9e711f75'
         }
-      };
-    
+      });
+      const data = await response.json();
+      onSearch(data);
+    } catch (error) {
+      console.error('Error searching for events:', error);
+    }
+  };
+
   return (
     <div className="mt-8">
       <div className="flex">

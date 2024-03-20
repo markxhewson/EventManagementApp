@@ -63,6 +63,29 @@ function Reviews() {
     }
   };
 
+  function getTimeAgo(timestamp) {
+    const now = new Date();
+    const seconds = Math.floor((now - timestamp) / 1000);
+
+    if (seconds < 5) {
+      return "Just now";
+    } else if (seconds < 60) {
+      return seconds + " seconds ago";
+    } else if (seconds < 3600) {
+      const minutes = Math.floor(seconds / 60);
+      return minutes + (minutes === 1 ? " minute ago" : " minutes ago");
+    } else if (seconds < 86400) {
+      const hours = Math.floor(seconds / 3600);
+      return hours + (hours === 1 ? " hour ago" : " hours ago");
+    } else if (seconds < 2592000) {
+      const days = Math.floor(seconds / 86400);
+      return days + (days === 1 ? " day ago" : " days ago");
+    } else {
+      return new Date(timestamp).toDateString();
+    }
+  }
+
+
   return (
     <div className="bg-gray-100 p-9 mb-4 flex justify-center items-center h-auto rounded-xl">
       <div className="w-full">
@@ -103,7 +126,7 @@ function Reviews() {
                 <div className='flex justify-between'>
                   <div className='flex flex-row gap-4 items-center'>
                     <h3>{review.user.username}</h3>
-                    <h3 className='text-gray-700 text-[10px]'>{new Date(review.createdAt).toDateString()}</h3>
+                    <h3 className='text-gray-700 text-[10px]'>{getTimeAgo(new Date(review.createdAt))}</h3>
                   </div>
                   <h3>{review.rating}☆</h3>
                 </div>

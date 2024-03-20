@@ -8,6 +8,7 @@ export function useAuthContext() {
 
 export default function AuthContextProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAwaitingAuth, setIsAwaitingAuth] = useState(false);
   const [user, setUser] = useState();
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function AuthContextProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, user }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, user, isAwaitingAuth, setIsAwaitingAuth }}>
       {children}
     </AuthContext.Provider>
   );

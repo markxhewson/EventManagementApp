@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom";
 import registerUser from "../../util/registerUser";
 import { Link } from 'react-router-dom';
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { useAuthContext } from "../../context/AuthContext";
 
 const Signup = () => {
     const navigate = useNavigate();
+
+    const { setIsAwaitingAuth } = useAuthContext();
 
     const [interests, setInterests] = useState([]);
     const [formData, setFormData] = useState({
@@ -108,6 +111,7 @@ const Signup = () => {
 
                 alert('Registered successfully');
 
+                setIsAwaitingAuth(true);
                 navigate('/verification', { state: { signupVerification: true } });
             })
     };

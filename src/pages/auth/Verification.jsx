@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { useAuthContext } from "../../context/AuthContext";
@@ -12,7 +12,13 @@ const Verification = () => {
 
     const [verificationCodes, setVerificationCodes] = useState(['', '', '', '', '', '']);
 
-    const { login } = useAuthContext();
+    const { login, isAwaitingAuth } = useAuthContext();
+
+    useEffect(() => {
+        if (!isAwaitingAuth) {
+            return navigation('/');
+        }
+    }, []);
 
     const handleChange = (index, value) => {
         // Only update state if the value is a number
