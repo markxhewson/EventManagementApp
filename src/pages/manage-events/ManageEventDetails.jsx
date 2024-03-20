@@ -95,7 +95,7 @@ const EventHeader = ({ event, refresh }) => {
         }
     }
 
-    const printEventRegistrations = async() => {
+    const printEventRegistrations = async () => {
         fetch(`/api/registrations/event/${event.id}/pdf`, {
             headers: {
                 'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75",
