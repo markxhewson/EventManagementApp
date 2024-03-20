@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Reviews from "../components/Reviews";
 import SearchBar from "../components/SearchBar";
+import { FaEye } from "react-icons/fa";
 
 const Home = () => {
   const [events, setEvents] = useState([]);
@@ -60,7 +61,7 @@ const Home = () => {
               <div className="mt-8">
                 <h1 className="text-3xl">EVENTS YOU SIGNED UP FOR</h1>
                 {events.length === 0 && <p className='text-red-600 mt-3'>You have not signed up for any events!</p>}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-4">
                   {
                     events.map((e) => <EventItem key={e.id} event={e} />)
                   }
@@ -69,12 +70,10 @@ const Home = () => {
             </div>
           </div>
           <div className="flex-2">
-            <Reviews className="bg-gray-100 p-9 mb-4 flex justify-center h-full rounded-xl" />
+            <Reviews className="bg-gray-100 p-9 mb-4 flex justify-center h-fit rounded-xl" />
           </div>
         </div>
       </div>
-
-
     </>
   );
 };

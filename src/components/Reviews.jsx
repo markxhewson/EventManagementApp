@@ -89,7 +89,7 @@ function Reviews({ className }) {
   return (
     <div className={className}>
       <div className="w-full">
-        <h1 className="text-xl font-bold  mb-8 text-center">Customer Reviews</h1>
+        <h1 className="text-xl font-bold mb-8 text-center">Customer Reviews</h1>
 
         <div className="flex justify-center mb-4">
           <form onSubmit={postReviews} className="flex">

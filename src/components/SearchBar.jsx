@@ -74,16 +74,19 @@ const SearchBar = ({ className }) => {
           className="flex-1 px-4 py-2 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200 w-24"
         />
       </div>
-      <h1 className="mt-8 text-3xl">SEARCH RESULTS</h1>
+      <div className="flex flex-row items-center">
+        <h1 className="mt-8 text-3xl">SEARCH RESULTS</h1>
+        <h3 className="text-md mt-8 text-gray-600 ml-8 italic">{search}</h3>
+      </div>
       {getFilteredEvents().length < 1 && <p className='text-red-600 mt-3'>Use the search bar to lookup key words in events!</p>}
-      {getFilteredEvents().length > 1 && <div className="mt-4 grid grid-cols-1 md:grid-cols-6 gap-4">
+      {getFilteredEvents().length > 1 && <div className="mt-4 grid grid-cols-1 md:grid-cols-5 gap-4">
         {
           getFilteredEvents().length > 0 && getFilteredEvents().map((e) => <EventItem key={e.id} event={e} />)
         }
       </div>}
       <h1 className="mt-8 text-3xl">UPCOMING EVENTS</h1>
       {events !== undefined && upcoming.length === 0 && <p className='text-white mt-8'>No upcoming events</p>}
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-6 gap-4">
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-5 gap-4">
         {
           upcoming.length > 0 && upcoming.map((e) => <EventItem key={e.id} event={e} />)
         }
