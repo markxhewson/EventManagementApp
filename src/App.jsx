@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom"
+import { Route, Routes } from "react-router-dom"
 import Home from "./pages/Home"
 import DefaultSignup from "./pages/auth/DefaultSignup"
 import Signup from "./pages/auth/Signup"
@@ -11,6 +11,7 @@ import ManageEvents from "./pages/manage-events/ManageEvents"
 import OrganiserSignup from "./pages/auth/OrganiserSignup"
 import OrganiserApplications from "./pages/manage-events/OrganiserApplications"
 import ManageEventDetails from "./pages/manage-events/ManageEventDetails"
+import PageNotFound from "./pages/error/PageNotFound"
 
 function App() {
     const { isLoggedIn } = useAuthContext();
@@ -40,8 +41,7 @@ function App() {
                             <Route path='/manage-events/:id' element={<ManageEventDetails />} />
                             <Route path='/organiser-signup' element={<OrganiserSignup />} />
                             <Route path='/organiser-applications' element={<OrganiserApplications />} />
-                            {/* <Route path="*" element={<PageNotFound />} /> */}
-                            <Route path="/*" element={<Navigate to="/" />} />
+                            <Route path="*" element={<PageNotFound />} />
                         </>
                     ) : (
                         <>
@@ -49,8 +49,7 @@ function App() {
                             <Route path="/signup" element={<Signup />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/verification" element={<Verification />} />
-                            {/* <Route path="*" element={<PageNotFound />} /> */}
-                            <Route path="/*" element={<Navigate to="/landing" />} />
+                            <Route path="*" element={<PageNotFound />} />
                         </>
                     )
                 }

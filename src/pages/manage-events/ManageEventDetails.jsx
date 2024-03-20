@@ -280,7 +280,7 @@ const Registrations = ({ event }) => {
                     Registrations
                     { event.status === 'paused' && <span className='italic'> (Paused)</span> }
                 </h1>
-                <div className='flex flex-col gap-5 mt-5'>
+                <div className='flex flex-col gap-5 mt-5 overflow-x-auto'>
                     <table className='w-full'>
                         <thead>
                             <tr className='bg-black'>
@@ -316,7 +316,7 @@ const Registrations = ({ event }) => {
                 waitingList.length > 0 && (
                     <div className='p-10 mx-12 mb-12 lg:mx-24 flex-grow rounded-md bg-neutral-500/15 backdrop-blur-3xl'>
                         <h1 className='text-white text-3xl font-semibold'>Waiting List</h1>
-                        <div className='flex flex-col gap-5 mt-5'>
+                        <div className='flex flex-col gap-5 mt-5 overflow-x-auto'>
                             <table className='w-full'>
                                 <thead>
                                     <tr className='bg-black'>
