@@ -1,4 +1,3 @@
-import React, { useMemo, useState } from "react";
 import { useController } from "react-hook-form";
 import { FaTimesCircle } from "react-icons/fa";
 
@@ -26,7 +25,7 @@ export default function ZodInput({ control, fieldName, className, ...props }) {
             )}
         </div>
     );
-};
+}
 
 export function ZodTextarea({ control, fieldName, className, ...props }) {
 
@@ -52,4 +51,4 @@ export function ZodTextarea({ control, fieldName, className, ...props }) {
             )}
         </div>
     );
-};
+}

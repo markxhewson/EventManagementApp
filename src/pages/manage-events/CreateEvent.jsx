@@ -3,6 +3,9 @@ import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ZodInput, { ZodTextarea } from '../../components/ZodInput';
+import Select from 'react-select';
+import { useState, useEffect } from 'react';
+import makeAnimated from 'react-select/animated';
 
 const eventSchema = z.object({
     name: z.string().min(1).max(255),
@@ -10,12 +13,40 @@ const eventSchema = z.object({
     location: z.string().min(1).max(255),
     start_date: z.date({ coerce: true }),
     end_date: z.date({ coerce: true }),
-    image: z.any()
+    image: z.any(),
+    max_registrations: z.number({ coerce: true }).int().min(0),
+    interests: z.any()
 });
 
 const CreateEvent = ({ isOpen, onClose }) => {
 
-    const { control, handleSubmit, register } = useForm({
+    const [ interests, setInterests ] = useState([]);
+    const animatedComponents = makeAnimated();
+
+    useEffect(() => {
+        async function load() {
+            try {
+                const resp = await fetch('/api/interests', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75"
+                    },
+                });
+                if (!resp.ok) throw new Error();
+    
+                const data = await resp.json();
+                setInterests(
+                    data.map(d => ({ value: d.id, label: d.name }))
+                );
+            }
+            catch(err) {
+                console.error(err);
+            }
+        }
+        load();
+    }, []);
+
+    const { control, handleSubmit, register, setValue } = useForm({
         resolver: zodResolver(eventSchema),
         defaultValues: {
             name: '',
@@ -23,7 +54,9 @@ const CreateEvent = ({ isOpen, onClose }) => {
             location: '',
             start_date: '',
             end_date: '',
-            image: ''
+            image: '',
+            max_registrations: '',
+            interests: []
         }
     })
 
@@ -35,7 +68,13 @@ const CreateEvent = ({ isOpen, onClose }) => {
             // Construct multipart form data object for file upload
             const formData  = new FormData();
             for(const name in values) {
-                formData.append(name, values[name]);
+                // Array items need to be appended individually
+                if (Array.isArray(values[name])) {
+                    values[name].forEach((v) => {
+                        formData.append(name, v);
+                    });
+                }
+                else formData.append(name, values[name]);
             }
             // Set image field to the individual file instead of FileList object
             if (values.image?.[0]) {
@@ -60,6 +99,7 @@ const CreateEvent = ({ isOpen, onClose }) => {
         }
     };
 
+
     return (
         <Modal
             isOpen={isOpen}
@@ -75,6 +115,26 @@ const CreateEvent = ({ isOpen, onClose }) => {
                         <ZodTextarea control={control} fieldName='description' type='text' placeholder='Description' className='w-full' />
 
                         <ZodInput control={control} fieldName='location' type='text' placeholder='Location' className='w-full' />
+                        <ZodInput control={control} fieldName='max_registrations' type='number' placeholder='Maximum Registrations' className='w-full' />
+
+                        <Select
+                            {...register('interests')}
+                            onChange={(val) => {
+                                setValue('interests', val.map(v => v.value))
+                            }}
+                            defaultValue={[]}
+                            components={animatedComponents}
+                            isMulti
+                            name="interests"
+                            placeholder="Select interests"
+                            options={interests}
+                            classNames={{
+                                container: () => 'w-full',
+                                control: () => '!border-gray-300',
+                                placeholder: () => '!text-gray-400 ps-1'
+                            }}
+                        />
+
                         <div className='flex items-center gap-2 mt-4'>
                             <label className='text-gray-700 flex-shrink-0'>Start time:</label>
                             <ZodInput control={control} fieldName='start_date' type='datetime-local' className='flex-grow !py-1 !px-2' />

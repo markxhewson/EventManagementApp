@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Navbar from "../Navbar";
 import CreateEvent from "./CreateEvent";
 import { FaEye } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function ManageEvents() {
 
@@ -92,15 +93,15 @@ export default function ManageEvents() {
 
 function EventItem({ event }) {
 
-    const { name, image_url, start_date, end_date, location, views } = event;
+    const { id, name, image_url, start_date, end_date, location, views } = event;
 
     const date = new Date(start_date).toLocaleDateString();
     const startTime = new Date(start_date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
     const endTime = new Date(end_date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
 
     return (
-        <div className='rounded-xl hover:scale-105 transition-transform cursor-pointer relative bg-neutral-800'>
-            <img className='rounded-xl min-h-[200px] object-cover' src={image_url ?? "img_placeholder.jpg"} alt="Event" />
+        <Link to={`/manage-events/${id}`} className='min-h-[200px] rounded-xl hover:scale-105 transition-transform cursor-pointer relative bg-neutral-800'>
+            <img className='rounded-xl w-full h-full object-cover' src={image_url ?? "/img_placeholder.jpg"} alt="Event" />
             <div className={`absolute bottom-0 left-0 w-full bg-black px-4 py-2 ${image_url ? 'bg-opacity-80' : 'bg-opacity-25'}`}>
                 <p className='text-white text-ellipsis text-nowrap overflow-hidden'>{ name }</p>
                 <p className='text-sm text-neutral-500 text-ellipsis text-nowrap overflow-hidden'>
@@ -117,6 +118,6 @@ function EventItem({ event }) {
                     <span className='text-sm ms-2'>{ views }</span>
                 </p>
             </div>
-        </div>
+        </Link>
     )
 }

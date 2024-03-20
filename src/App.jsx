@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom"
 import Home from "./pages/Home"
-import PageNotFound from "./pages/error/PageNotFound"
 import DefaultSignup from "./pages/auth/DefaultSignup"
 import Signup from "./pages/auth/Signup"
 import Login from "./pages/auth/Login"
@@ -11,8 +10,7 @@ import { useAuthContext } from "./context/AuthContext"
 import ManageEvents from "./pages/manage-events/ManageEvents"
 import OrganiserSignup from "./pages/auth/OrganiserSignup"
 import OrganiserApplications from "./pages/manage-events/OrganiserApplications"
-import Reviews from "./components/Reviews"
-import SearchBar from "./components/SearchBar"
+import ManageEventDetails from "./pages/manage-events/ManageEventDetails"
 
 function App() {
     const { isLoggedIn } = useAuthContext();
@@ -39,6 +37,7 @@ function App() {
                             <Route path="/account" element={<AccountDetailsPage />} />
                             <Route path="/verification" element={<Verification />} />
                             <Route path='/manage-events' element={<ManageEvents />} />
+                            <Route path='/manage-events/:id' element={<ManageEventDetails />} />
                             <Route path='/organiser-signup' element={<OrganiserSignup />} />
                             <Route path='/organiser-applications' element={<OrganiserApplications />} />
                             {/* <Route path="*" element={<PageNotFound />} /> */}
