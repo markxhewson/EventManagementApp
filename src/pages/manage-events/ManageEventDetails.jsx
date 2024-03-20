@@ -2,7 +2,7 @@ import { Navigate, useParams } from "react-router-dom";
 import Navbar from "../Navbar";
 import { useEffect, useMemo } from "react";
 import { useState } from "react";
-import { FaBan, FaClock, FaEdit, FaMap, FaPrint, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
+import { FaBan, FaClock, FaDownload, FaEdit, FaMap, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
 import EditEvent from "./EditEvent";
 import CancelEvent from "./CancelEvent";
 
@@ -67,7 +67,7 @@ export default function ManageEventDetails() {
 
 const EventHeader = ({ event, refresh }) => {
 
-    const { name, description, image_url, start_date, end_date, location, max_registrations, views, interests, status } = event;
+    const { id, name, description, image_url, start_date, end_date, location, max_registrations, views, interests, status } = event;
 
     const date = new Date(start_date).toLocaleDateString();
     const startTime = new Date(start_date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
@@ -79,7 +79,7 @@ const EventHeader = ({ event, refresh }) => {
     const updateEventStatus = async(status) => {
         // Update event status
         try {
-            const resp = await fetch(`/api/events/status/${event.id}`, {
+            const resp = await fetch(`/api/events/status/${id}`, {
                 headers: {
                     'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75",
                     'content-type': 'application/json'
@@ -88,41 +88,34 @@ const EventHeader = ({ event, refresh }) => {
                 body: JSON.stringify({ status })
             });
             if (!resp.ok) throw new Error();
-            await refresh(event.id);
+            await refresh(id);
         } catch(err) {
             console.error(err);
             alert('An error occurred. Please try again later.');
         }
     }
 
-    const printEventRegistrations = async () => {
-        fetch(`/api/registrations/event/${event.id}/pdf`, {
-            headers: {
-                'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75",
-            }
-        })
-        .then(response => response.blob())
-        .then(blobby => {
-            const objectUrl = window.URL.createObjectURL(blobby);
+    const getEventRegistrations = () => {
+        // Create a fake form to submit, so that we can include the "api-key" in the body
+        const form = document.createElement("form");
+        form.target = '_blank';
+        form.action = `/api/registrations/event/${id}/pdf`;
+        form.method = "POST";
 
-            // Assign the PDF to an iframe 
-            const iframe = document.createElement("iframe");
-            iframe.style.display = 'none';
-            iframe.src = objectUrl;
-            document.body.appendChild(iframe);
+        // Include API key
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "api-key";
+        input.value = "43d44abf-qlgl-6322-jujw-3b3a9e711f75"
 
-            // Call the print method on the iframe
-            iframe.focus();
-            iframe.contentWindow.print();
+        // Submit form in the new tab
+        form.append(input);
+        document.body.appendChild(form);
+        form.submit();
 
-            // Cleanup when the print dialog is closed and the window regains focus
-            const onFocus = () => {
-                window.URL.revokeObjectURL(objectUrl);
-                iframe.remove();
-                window.removeEventListener('focus', onFocus);
-            }
-            window.addEventListener('focus', onFocus);
-        });
+        // Cleanup
+        input.remove();
+        form.remove();
     }
 
     return (
@@ -175,11 +168,11 @@ const EventHeader = ({ event, refresh }) => {
                 </li>
                 <li>
                     <button
-                        onClick={printEventRegistrations}
+                        onClick={getEventRegistrations}
                         className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'
                     >
-                        <FaPrint className="me-3" />
-                        Print registration list
+                        <FaDownload className="me-3" />
+                        Get registration list
                     </button>
                 </li>
                 {
@@ -227,7 +220,7 @@ const EventHeader = ({ event, refresh }) => {
                 event={event}
                 isOpen={showEdit}
                 onClose={async() => {
-                    await refresh(event.id);
+                    await refresh(id);
                     setShowEdit(false)
                 }}
             />
@@ -235,7 +228,7 @@ const EventHeader = ({ event, refresh }) => {
                 event={event}
                 isOpen={showCancel}
                 onClose={async() => {
-                    await refresh(event.id);
+                    await refresh(id);
                     setShowCancel(false)
                 }}
             />
@@ -244,13 +237,14 @@ const EventHeader = ({ event, refresh }) => {
 }
 
 const Registrations = ({ event }) => {
-
-    const [ reg, setReg ] = useState([]);
+    
+    const { id, max_registrations } = event;
+    const [ data, setData ] = useState([]);
 
     useEffect(() => {
         async function fetchRegistrations() {
             try {
-                const resp = await fetch(`/api/registrations/event/${event.id}`, {
+                const resp = await fetch(`/api/registrations/event/${id}`, {
                     headers: {
                         'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75"
                     },
@@ -258,22 +252,26 @@ const Registrations = ({ event }) => {
                 if (!resp.ok) throw new Error();
     
                 const data = await resp.json();
-                setReg(data);
+                setData(data);
             } catch(err) {
                 console.error(err);
                 alert('An error occurred. Please try again later.');
             }
         }
         fetchRegistrations();
-    }, [ event.id ]);
+    }, [ id ]);
 
-    const registrations = useMemo(() => {
-        return reg.filter(r => r.status === 'GOING')
-    }, [reg]);
+    const [ registrations, waitingList ] = useMemo(() => {
+        let registrations = data;
+        let waitingList = [];
 
-    const waitingList = useMemo(() => {
-        return reg.filter(r => r.status !== 'GOING')
-    }, [reg]);
+        if (max_registrations && data.length > max_registrations) {
+            registrations = data.slice(0, max_registrations);
+            waitingList = data.slice(max_registrations);
+        }
+
+        return [ registrations, waitingList ];
+    }, [data, max_registrations]);
 
     return (
         <>
