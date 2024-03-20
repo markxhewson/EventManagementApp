@@ -20,7 +20,7 @@ export default function Navbar() {
                                     <Link to="/" className="text-black hover:border-black border-2 border-transparent px-3 py-2 rounded-md text-xl font-medium">
                                         <h1>HOME</h1>
                                     </Link>
-                                    <Link to="/events" className="text-black hover:border-black border-2 border-transparent px-3 py-2 rounded-md text-xl font-medium">
+                                    <Link to="/event-list" className="text-black hover:border-black border-2 border-transparent px-3 py-2 rounded-md text-xl font-medium">
                                         <h1>OUR EVENTS</h1>
                                     </Link>
                                     <Link to="/about" className="text-black hover:border-black border-2 border-transparent px-3 py-2 rounded-md text-xl font-medium">

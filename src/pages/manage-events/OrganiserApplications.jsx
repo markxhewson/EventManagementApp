@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Navbar from "../Navbar";
+import Navbar from "../../components/Navbar";
 
 const OrganiserApplications = () => {
     const [applications, setApplications] = useState([]);

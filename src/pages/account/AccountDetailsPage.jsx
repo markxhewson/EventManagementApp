@@ -3,7 +3,7 @@ import { useAuthContext } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { AiFillInfoCircle } from "react-icons/ai";
 import { Tooltip } from 'react-tooltip';
-import Navbar from '../Navbar';
+import Navbar from '../../components/Navbar';
 
 const AccountDetailsPage = () => {
     const [emailNotifications, setEmailNotifications] = useState(0);
