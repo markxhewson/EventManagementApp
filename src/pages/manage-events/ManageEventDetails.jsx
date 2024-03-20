@@ -3,6 +3,7 @@ import Navbar from "../Navbar";
 import { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { FaBan, FaClock, FaDownload, FaEdit, FaMap, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
+import EditEvent from "./EditEvent";
 
 export default function ManageEventDetails() {
 
@@ -56,20 +57,22 @@ export default function ManageEventDetails() {
 
             {/* Event details */}
             <div className='flex flex-col w-screen relative'>
-                <EventHeader event={event} />
+                <EventHeader event={event} refresh={fetchEvents} />
                 <Registrations event={event} />
             </div>
         </div>
     );
 }
 
-const EventHeader = ({ event }) => {
+const EventHeader = ({ event, refresh }) => {
 
     const { name, description, image_url, start_date, end_date, location, max_registrations, views, interests, status } = event;
 
     const date = new Date(start_date).toLocaleDateString();
     const startTime = new Date(start_date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
     const endTime = new Date(end_date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+
+    const [ showEdit, setShowEdit ] = useState(false);
 
     return (
         <div className='flex flex-col lg:flex-row gap-y-5 lg:items-center p-10 m-12 lg:mx-24 flex-grow rounded-md bg-neutral-500/15 backdrop-blur-3xl'>
@@ -111,7 +114,7 @@ const EventHeader = ({ event }) => {
             </div>
             <ul className='lg:ms-auto flex flex-col gap-2 py-2 flex-shrink-0'>
                 <li>
-                    <button className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'>
+                    <button onClick={() => setShowEdit(true)} className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'>
                         <FaEdit className="me-3" />
                         Edit Details
                     </button>
@@ -153,6 +156,15 @@ const EventHeader = ({ event }) => {
                     ) 
                 }
             </ul>
+
+            <EditEvent
+                event={event}
+                isOpen={showEdit}
+                onClose={async() => {
+                    await refresh(event.id);
+                    setShowEdit(false)
+                }}
+            />
         </div>
     );
 }

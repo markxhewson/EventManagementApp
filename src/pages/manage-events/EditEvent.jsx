@@ -18,8 +18,7 @@ const eventSchema = z.object({
     interests: z.any()
 });
 
-const CreateEvent = ({ isOpen, onClose }) => {
-
+const EditEvent = ({ event, isOpen, onClose }) => {
     const [ interests, setInterests ] = useState([]);
     const animatedComponents = makeAnimated();
 
@@ -46,17 +45,21 @@ const CreateEvent = ({ isOpen, onClose }) => {
         load();
     }, []);
 
+    const convertDateToInputValue = (date) => {
+        return new Date(date).toISOString().slice(0, 16);
+    }
+
     const { control, handleSubmit, register, setValue } = useForm({
         resolver: zodResolver(eventSchema),
         defaultValues: {
-            name: '',
-            description: '',
-            location: '',
-            start_date: '',
-            end_date: '',
+            name: event.name,
+            description: event.description,
+            location: event.location,
+            start_date: convertDateToInputValue(event.start_date),
+            end_date: convertDateToInputValue(event.end_date),
             image: '',
-            max_registrations: '',
-            interests: []
+            max_registrations: event.max_registrations || '',
+            interests: event.interests.map(i => ({ value: i.interestId, label: i.name }))
         }
     })
 
@@ -68,13 +71,8 @@ const CreateEvent = ({ isOpen, onClose }) => {
             // Construct multipart form data object for file upload
             const formData  = new FormData();
             for(const name in values) {
-                // Array items need to be appended individually
-                if (Array.isArray(values[name])) {
-                    values[name].forEach((v) => {
-                        formData.append(name, v);
-                    });
-                }
-                else formData.append(name, values[name]);
+                if (name === 'interests') continue;
+                formData.append(name, values[name]);
             }
             // Set image field to the individual file instead of FileList object
             if (values.image?.[0]) {
@@ -83,12 +81,16 @@ const CreateEvent = ({ isOpen, onClose }) => {
             else {
                 formData.delete('image');
             }
+            // Set interest IDs separately
+            for (const i of values.interests) {
+                formData.append('interests', i.value);
+            }
 
-            const resp = await fetch('/api/events', {
+            const resp = await fetch(`/api/events/${event.id}`, {
                 headers: {
                     'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75"
                 },
-                method: 'POST',
+                method: 'PUT',
                 body: formData
             });
             if (!resp.ok) throw new Error();
@@ -109,7 +111,7 @@ const CreateEvent = ({ isOpen, onClose }) => {
         >
             <div className='fixed inset-0 flex items-center justify-center p-4 w-screen h-screen'>
                 <div className='max-w-md w-full mx-auto p-6 bg-white rounded-lg shadow-md'>
-                    <h1 className="text-2xl font-semibold">Create event</h1>
+                    <h1 className="text-2xl font-semibold">Edit event</h1>
                     <form onSubmit={handleSubmit(onCreate)} className="flex flex-col gap-2 mt-4">
                         <ZodInput control={control} fieldName='name' type='text' placeholder='Name' className='w-full' />
                         <ZodTextarea control={control} fieldName='description' type='text' placeholder='Description' className='w-full' />
@@ -118,11 +120,10 @@ const CreateEvent = ({ isOpen, onClose }) => {
                         <ZodInput control={control} fieldName='max_registrations' type='number' placeholder='Maximum Registrations' className='w-full' />
 
                         <Select
-                            {...register('interests')}
                             onChange={(val) => {
-                                setValue('interests', val.map(v => v.value))
+                                setValue('interests', val)
                             }}
-                            defaultValue={[]}
+                            defaultValue={event.interests.map(i => ({ value: i.interestId, label: i.name }))}
                             components={animatedComponents}
                             isMulti
                             name="interests"
@@ -159,7 +160,7 @@ const CreateEvent = ({ isOpen, onClose }) => {
                                 Cancel
                             </button>
                             <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Create
+                                Save
                             </button>
                         </div>
                     </form>
@@ -169,4 +170,4 @@ const CreateEvent = ({ isOpen, onClose }) => {
     );
 };
 
-export default CreateEvent;
+export default EditEvent;
