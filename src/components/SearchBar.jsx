@@ -71,13 +71,8 @@ const SearchBar = ({ className }) => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search for events..."
-          className="flex-1 px-4 py-2 border text-black border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-200 w-24"
+          className="flex-1 px-4 py-2 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200 w-24"
         />
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200"
-        >
-          Search
-        </button>
       </div>
       <h1 className="mt-8 text-3xl">SEARCH RESULTS</h1>
       {getFilteredEvents().length < 1 && <p className='text-red-600 mt-3'>Use the search bar to lookup key words in events!</p>}

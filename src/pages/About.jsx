@@ -6,7 +6,7 @@ const About = () => {
             <Navbar />
 
             <div>
-                <h1 className="text-4xl">CREDITS</h1>
+                <h1 className="text-4xl">DEVELOPER CREDITS</h1>
                 <table className="w-full mt-8 border-collapse text-white">
                     <thead>
                         <tr className="bg-black">
@@ -44,6 +44,51 @@ const About = () => {
                     </tbody>
                 </table>
             </div>
+
+            <div className="max-w-4xl mx-auto px-4 pt-8">
+      <div className="shadow-lg rounded-md ">
+        <div className="p-8">
+
+          <h1 className="text-3xl text-center font-bold mb-8 p-6">About Us</h1>
+
+          <p className=" mb-12 text-center">Welcome to our platform, where individuals gather to promote well-being and participate in diverse events.
+            We specialize in event management, focusing on health check-ups and a variety of other engaging activities.
+            Whether you're an organization seeking to host an event or an individual interested in participating,
+            we're here to ensure seamless connections and meaningful experiences.</p>
+
+
+
+          <h2 className="text-xl font-semibold mb-7 text-center">Our Mission</h2>
+
+          <p className="text-gray-500 mb-8">
+            Our mission is centered around our commitment to fostering healthier communities through accessible and engaging events.
+            We strive to bridge the gap between organizations offering health check-ups, workshops, and various events,
+            and individuals seeking opportunities for improving their well-being.</p>
+
+          <h2 className="text-xl  font-semibold  mb-7 text-center">What We Offer</h2>
+
+          <p className=" mb-2"> Platform for Event Hosts: </p>
+          <p className="text-gray-500 mb-4"> Organizations dedicated to health awareness, wellness, and community development can leverage our platform to effortlessly showcase their events.
+            We provide a space for hosts to reach a diverse audience and make a positive impact. </p>
+          <p className=" mb-2">User-Friendly Interface:</p>
+          <p className="text-gray-500 mb-4">Our platform ensures a seamless experience for both event hosts and attendees.
+            Hosts can easily create and manage event listings, while attendees can effortlessly browse and register for events that align with their interests and schedules. </p>
+          <p className=" mb-2">Comprehensive Event Listings:</p>
+          <p className="text-gray-500 mb-4"> Explore a wide range of events tailored to diverse interests and preferences. You'll find an array of enriching experiences to enhance your well-being.</p>
+
+
+          <h2 className="text-xl font-semibold mb-7 text-center">Why Choose Us</h2>
+
+          <p className=" mb-2">Expertise in Health and Event Management:</p>
+          <p className="text-gray-500 mb-4">Benefit from our specialized knowledge and experience in both health promotion and event coordination. We understand the unique needs of both hosts and attendees, ensuring a smooth and rewarding experience for all involved. </p>
+          <p className=" mb-2">User-Focused Approach: </p>
+          <p className="text-gray-500 mb-4">Our platform is designed with your needs in mind. We prioritize user satisfaction and strive to provide a seamless experience for both event hosts and attendees, making it easy to find and participate in events that matter to you. </p>
+          <p className=" mb-2">Reliability and Trustworthiness:</p>
+          <p className="text-gray-500 mb-4">Count on us to deliver on our promises. With a reputation for reliability, we're committed to making sure that every event you attend or host through our platform exceeds your expectations.</p>
+        </div>
+
+      </div>
+    </div>
 
         </div>
     );
