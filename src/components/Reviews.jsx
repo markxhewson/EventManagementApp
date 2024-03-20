@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthContext } from '../context/AuthContext';
 
-function Reviews() {
+function Reviews({ className }) {
   const [reviews, setReviews] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [newRating, setNewRating] = useState(0);
@@ -87,9 +87,9 @@ function Reviews() {
 
 
   return (
-    <div className="bg-gray-100 p-9 mb-4 flex justify-center items-center h-auto rounded-xl">
+    <div className={className}>
       <div className="w-full">
-        <h1 className="text-xl font-bold  mb-8 text-center">Customer Reviews</h1>
+        <h1 className="text-xl font-bold mb-8 text-center">Customer Reviews</h1>
 
         <div className="flex justify-center mb-4">
           <form onSubmit={postReviews} className="flex">
@@ -120,7 +120,7 @@ function Reviews() {
         )}
 
         {reviews.length > 0 && (
-          <div className="flex flex-col w-auto max-h-52 overflow-y-auto">
+          <div className="flex flex-col w-auto max-h-[550px] overflow-y-auto">
             {reviews.slice(0, 12).map((review) => (
               <div key={review.id} className="bg-white border max-w-96 mb-4 p-4 rounded-md">
                 <div className='flex justify-between'>

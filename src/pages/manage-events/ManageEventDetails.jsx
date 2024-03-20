@@ -1,5 +1,5 @@
 import { Navigate, useParams } from "react-router-dom";
-import Navbar from "../Navbar";
+import Navbar from "../../components/Navbar";
 import { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { FaBan, FaClock, FaDownload, FaEdit, FaMap, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";

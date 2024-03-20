@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import Navbar from "../Navbar";
+import Navbar from "../../components/Navbar";
 import CreateEvent from "./CreateEvent";
 import { FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
