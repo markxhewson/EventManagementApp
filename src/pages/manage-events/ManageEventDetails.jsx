@@ -2,7 +2,7 @@ import { Navigate, useParams } from "react-router-dom";
 import Navbar from "../Navbar";
 import { useEffect, useMemo } from "react";
 import { useState } from "react";
-import { FaBan, FaClock, FaDownload, FaEdit, FaMap, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
+import { FaBan, FaClock, FaEdit, FaMap, FaPrint, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
 import EditEvent from "./EditEvent";
 import CancelEvent from "./CancelEvent";
 
@@ -95,6 +95,36 @@ const EventHeader = ({ event, refresh }) => {
         }
     }
 
+    const printEventRegistrations = async() => {
+        fetch(`/api/registrations/event/${event.id}/pdf`, {
+            headers: {
+                'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75",
+            }
+        })
+        .then(response => response.blob())
+        .then(blobby => {
+            const objectUrl = window.URL.createObjectURL(blobby);
+
+            // Assign the PDF to an iframe 
+            const iframe = document.createElement("iframe");
+            iframe.style.display = 'none';
+            iframe.src = objectUrl;
+            document.body.appendChild(iframe);
+
+            // Call the print method on the iframe
+            iframe.focus();
+            iframe.contentWindow.print();
+
+            // Cleanup when the print dialog is closed and the window regains focus
+            const onFocus = () => {
+                window.URL.revokeObjectURL(objectUrl);
+                iframe.remove();
+                window.removeEventListener('focus', onFocus);
+            }
+            window.addEventListener('focus', onFocus);
+        });
+    }
+
     return (
         <div className='flex flex-col lg:flex-row gap-y-5 lg:items-center p-10 m-12 lg:mx-24 flex-grow rounded-md bg-neutral-500/15 backdrop-blur-3xl'>
             <div className='flex items-center flex-shrink-0'>
@@ -145,10 +175,11 @@ const EventHeader = ({ event, refresh }) => {
                 </li>
                 <li>
                     <button
+                        onClick={printEventRegistrations}
                         className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'
                     >
-                        <FaDownload className="me-3" />
-                        Save registration list
+                        <FaPrint className="me-3" />
+                        Print registration list
                     </button>
                 </li>
                 {
