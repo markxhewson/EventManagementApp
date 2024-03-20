@@ -9,7 +9,7 @@ const Login = () => {
     const [verificationType, setVerificationType] = useState('email');
     
     const navigate = useNavigate();
-    const { user, login } = useAuthContext();
+    const { login, setIsAwaitingAuth } = useAuthContext();
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -34,6 +34,7 @@ const Login = () => {
             }
 
             if (data.user.twoFactorAuth) {
+                setIsAwaitingAuth(true);
                 navigate('/verification', { state: { signupVerification: false } });
                 
                 await fetch('/api/auth/send-code', {
