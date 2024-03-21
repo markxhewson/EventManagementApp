@@ -1,7 +1,7 @@
 import { Navigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import { useEffect, useState } from "react";
-import { FaBan, FaClock, FaDownload, FaEdit, FaFileImage, FaMap, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
+import { FaBan, FaClock, FaEdit, FaFileImage, FaMap, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
 import EditEvent from "./EditEvent";
 import CancelEvent from "./CancelEvent";
 import EventRegistrations from "./EventRegistrations";
@@ -97,37 +97,30 @@ const EventHeader = ({ event, refresh }) => {
         }
     }
 
-    const getEventRegistrations = () => {
-        // Create a fake form to submit, so that we can include the "api-key" in the body
-        const form = document.createElement("form");
-        form.target = '_blank';
-        form.action = `/api/registrations/event/${id}/pdf`;
-        form.method = "POST";
-
-        // Include API key
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "api-key";
-        input.value = "43d44abf-qlgl-6322-jujw-3b3a9e711f75"
-
-        // Submit form in the new tab
-        form.append(input);
-        document.body.appendChild(form);
-        form.submit();
-
-        // Cleanup
-        input.remove();
-        form.remove();
-    }
-
     return (
         <div className='flex flex-col lg:flex-row gap-y-5 lg:items-center p-10 m-12 lg:mx-24 flex-grow rounded-md bg-neutral-500/15 backdrop-blur-3xl'>
-            <div className='flex items-center flex-shrink-0 relative'>
+            <div className='flex flex-col items-center flex-shrink-0 relative'>
                 <img
                     className='object-cover rounded-md h-[200px]'
                     src={image_url ?? "/img_placeholder.jpg"}
                     alt="Event"
                 />
+                {!!image_url && (
+                    <>
+                        <button
+                            onClick={() => setShowPoster(true)}
+                            className='mt-3 flex items-center justify-center text-white py-1 px-3 rounded hover:bg-white hover:text-black transition-colors duration-500'
+                        >
+                            <FaFileImage className="me-3" />
+                            Generate Poster
+                        </button>
+                        <GetPoster
+                            event={event}
+                            isOpen={showPoster}
+                            onClose={() => setShowPoster(false)}
+                        />
+                    </>
+                )}
             </div>
             <div className='px-5 lg:px-10 flex-grow'>
                 <h1 className='text-white text-3xl font-semibold'>
@@ -175,33 +168,6 @@ const EventHeader = ({ event, refresh }) => {
                             setShowEdit(false)
                         }}
                     />
-                </li>
-                {
-                    !!image_url && (
-                        <li>
-                            <button
-                                onClick={() => setShowPoster(true)}
-                                className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'
-                            >
-                                <FaFileImage className="me-3" />
-                                Get Poster
-                            </button>
-                            <GetPoster
-                                event={event}
-                                isOpen={showPoster}
-                                onClose={() => setShowPoster(false)}
-                            />
-                        </li>
-                    )
-                }
-                <li>
-                    <button
-                        onClick={getEventRegistrations}
-                        className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'
-                    >
-                        <FaDownload className="me-3" />
-                        Get registration list
-                    </button>
                 </li>
                 {
                     status === 'active' && (
