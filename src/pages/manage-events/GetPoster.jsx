@@ -91,11 +91,15 @@ const GetPoster = ({ isOpen, onClose, event }) => {
                                     height: ${height};
                                 }
                             }
+                            html, body {
+                                width: ${width};
+                                height: ${height};
+                            }
                             body {
                                 margin: 0;
                                 background-size: cover;
                                 background-repeat: no-repeat;
-                                background-position: center center;
+                                background-position: left bottom;
                                 background-image: url(${base64Url});
                             }
                         </style>
