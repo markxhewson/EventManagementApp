@@ -1,10 +1,10 @@
 import { Navigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar";
-import { useEffect, useMemo } from "react";
-import { useState } from "react";
-import { FaBan, FaClock, FaDownload, FaEdit, FaMap, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaBan, FaClock, FaDownload, FaEdit, FaFileImage, FaMap, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
 import EditEvent from "./EditEvent";
 import CancelEvent from "./CancelEvent";
+import EventRegistrations from "./EventRegistrations";
 
 export default function ManageEventDetails() {
 
@@ -59,7 +59,7 @@ export default function ManageEventDetails() {
             {/* Event details */}
             <div className='flex flex-col w-screen relative'>
                 <EventHeader event={event} refresh={fetchEvents} />
-                <Registrations event={event} />
+                <EventRegistrations event={event} />
             </div>
         </div>
     );
@@ -118,9 +118,66 @@ const EventHeader = ({ event, refresh }) => {
         form.remove();
     }
 
+    const getEventPoster = () => {
+        const answer = confirm("Would you like the event name, date, and location to be included in the poster?");
+        if (!answer) {
+            return window.open(image_url, '_blank');
+        }
+
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const image = new Image();
+        image.src = image_url;
+        image.onload = () => {
+            if (image.height < 300 || image.width < 300) {
+                alert('The image is too small to add text. Please upload a larger image.');
+                canvas.remove();
+                image.remove();
+
+                return window.open(image_url, '_blank');
+            }
+
+            canvas.width = image.width;
+            canvas.height = image.height;
+            context.drawImage(image, 0, 0);
+
+            context.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            context.fillRect(0, canvas.height - 200, canvas.width, 200);
+
+            context.font = 'bold 50px Arial';
+            context.fillStyle = 'white';
+            context.fillText(name, 25, canvas.height - 140);
+
+            context.font = '25px Arial';
+            context.fillText(date, 25, canvas.height - 100);
+            context.fillText(`${startTime} - ${endTime}`, 25, canvas.height - 70);
+            context.fillText(`Location: ${location}`, 25, canvas.height - 20);
+
+            const base64Url = canvas.toDataURL('image/jpeg', 1);
+            const html = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>${name}</title>
+            </head>
+            <body style="margin:0;">
+                <img style="height:100%;" src="${base64Url}" alt="Event Poster">
+            </body>
+            </html>
+            `;
+            const newTab = window.open('about:blank', '_blank');
+            newTab.document.open();
+            newTab.document.write(html);
+            newTab.document.close();
+
+            canvas.remove();
+            image.remove();
+        };
+    };
+
     return (
         <div className='flex flex-col lg:flex-row gap-y-5 lg:items-center p-10 m-12 lg:mx-24 flex-grow rounded-md bg-neutral-500/15 backdrop-blur-3xl'>
-            <div className='flex items-center flex-shrink-0'>
+            <div className='flex items-center flex-shrink-0 relative'>
                 <img
                     className='object-cover rounded-md h-[200px]'
                     src={image_url ?? "/img_placeholder.jpg"}
@@ -166,6 +223,17 @@ const EventHeader = ({ event, refresh }) => {
                         Edit Details
                     </button>
                 </li>
+                {
+                    !!image_url && (
+                        <button
+                            onClick={getEventPoster}
+                            className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'
+                        >
+                            <FaFileImage className="me-3" />
+                            Get Poster
+                        </button>
+                    )
+                }
                 <li>
                     <button
                         onClick={getEventRegistrations}
@@ -234,118 +302,4 @@ const EventHeader = ({ event, refresh }) => {
             />
         </div>
     );
-}
-
-const Registrations = ({ event }) => {
-    
-    const { id, max_registrations } = event;
-    const [ data, setData ] = useState([]);
-
-    useEffect(() => {
-        async function fetchRegistrations() {
-            try {
-                const resp = await fetch(`/api/registrations/event/${id}`, {
-                    headers: {
-                        'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75"
-                    },
-                });
-                if (!resp.ok) throw new Error();
-    
-                const data = await resp.json();
-                setData(data);
-            } catch(err) {
-                console.error(err);
-                alert('An error occurred. Please try again later.');
-            }
-        }
-        fetchRegistrations();
-    }, [ id ]);
-
-    /**
-     * All registrations after `max_registrations` is considered as waiting list
-     */
-    const [ registrations, waitingList ] = useMemo(() => {
-        let registrations = data;
-        let waitingList = [];
-
-        if (max_registrations && data.length > max_registrations) {
-            registrations = data.slice(0, max_registrations);
-            waitingList = data.slice(max_registrations);
-        }
-
-        return [ registrations, waitingList ];
-    }, [data, max_registrations]);
-
-    return (
-        <>
-            <div className='p-10 mx-12 mb-12 lg:mx-24 flex-grow rounded-md bg-neutral-500/15 backdrop-blur-3xl'>
-                <h1 className='text-white text-3xl font-semibold'>
-                    Registrations
-                    { event.status === 'paused' && <span className='italic'> (Paused)</span> }
-                </h1>
-                <div className='flex flex-col gap-5 mt-5 overflow-x-auto'>
-                    <table className='w-full'>
-                        <thead>
-                            <tr className='bg-black'>
-                                <th className='text-white py-2 px-4 text-start'>#</th>
-                                <th className='text-white py-2 px-4 text-start'>Username</th>
-                                <th className='text-white py-2 px-4 text-start'>Email</th>
-                                <th className='text-white py-2 px-4 text-start'>Phone</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                registrations.length === 0 && (
-                                    <tr className='bg-neutral-800'>
-                                        <td colSpan='4' className='text-white py-4 px-4 text-center'>No registrations yet</td>
-                                    </tr>
-                                )
-                            }
-                            {
-                                registrations.map((r, i) => (
-                                    <tr key={r.id} className={i % 2 === 0 ? 'bg-neutral-800' : 'bg-neutral-700'}>
-                                        <td className='text-white py-2 px-4'>{i + 1}</td>
-                                        <td className='text-white py-2 px-4'>{r.username}</td>
-                                        <td className='text-white py-2 px-4'>{r.email}</td>
-                                        <td className='text-white py-2 px-4'>{r.phone}</td>
-                                    </tr>
-                                ))
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            {
-                waitingList.length > 0 && (
-                    <div className='p-10 mx-12 mb-12 lg:mx-24 flex-grow rounded-md bg-neutral-500/15 backdrop-blur-3xl'>
-                        <h1 className='text-white text-3xl font-semibold'>Waiting List</h1>
-                        <div className='flex flex-col gap-5 mt-5 overflow-x-auto'>
-                            <table className='w-full'>
-                                <thead>
-                                    <tr className='bg-black'>
-                                        <th className='text-white py-2 px-4 text-start'>#</th>
-                                        <th className='text-white py-2 px-4 text-start'>Username</th>
-                                        <th className='text-white py-2 px-4 text-start'>Email</th>
-                                        <th className='text-white py-2 px-4 text-start'>Phone</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        waitingList.map((r, i) => (
-                                            <tr key={r.id} className={i % 2 === 0 ? 'bg-neutral-800' : 'bg-neutral-700'}>
-                                                <td className='text-white py-2 px-4'>{registrations.length + i + 1}</td>
-                                                <td className='text-white py-2 px-4'>{r.username}</td>
-                                                <td className='text-white py-2 px-4'>{r.email}</td>
-                                                <td className='text-white py-2 px-4'>{r.phone}</td>
-                                            </tr>
-                                        ))
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                )
-            }
-        </>
-    )
 }
