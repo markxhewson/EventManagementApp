@@ -5,6 +5,7 @@ import { FaBan, FaClock, FaDownload, FaEdit, FaFileImage, FaMap, FaRegPauseCircl
 import EditEvent from "./EditEvent";
 import CancelEvent from "./CancelEvent";
 import EventRegistrations from "./EventRegistrations";
+import GetPoster from "./GetPoster";
 
 export default function ManageEventDetails() {
 
@@ -75,6 +76,7 @@ const EventHeader = ({ event, refresh }) => {
 
     const [ showEdit, setShowEdit ] = useState(false);
     const [ showCancel, setShowCancel ] = useState(false);
+    const [ showPoster, setShowPoster ] = useState(false);
 
     const updateEventStatus = async(status) => {
         // Update event status
@@ -117,63 +119,6 @@ const EventHeader = ({ event, refresh }) => {
         input.remove();
         form.remove();
     }
-
-    const getEventPoster = () => {
-        const answer = confirm("Would you like the event name, date, and location to be included in the poster?");
-        if (!answer) {
-            return window.open(image_url, '_blank');
-        }
-
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        const image = new Image();
-        image.src = image_url;
-        image.onload = () => {
-            if (image.height < 300 || image.width < 300) {
-                alert('The image is too small to add text. Please upload a larger image.');
-                canvas.remove();
-                image.remove();
-
-                return window.open(image_url, '_blank');
-            }
-
-            canvas.width = image.width;
-            canvas.height = image.height;
-            context.drawImage(image, 0, 0);
-
-            context.fillStyle = 'rgba(0, 0, 0, 0.5)';
-            context.fillRect(0, canvas.height - 200, canvas.width, 200);
-
-            context.font = 'bold 50px Arial';
-            context.fillStyle = 'white';
-            context.fillText(name, 25, canvas.height - 140);
-
-            context.font = '25px Arial';
-            context.fillText(date, 25, canvas.height - 100);
-            context.fillText(`${startTime} - ${endTime}`, 25, canvas.height - 70);
-            context.fillText(`Location: ${location}`, 25, canvas.height - 20);
-
-            const base64Url = canvas.toDataURL('image/jpeg', 1);
-            const html = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>${name}</title>
-            </head>
-            <body style="margin:0;">
-                <img style="height:100%;" src="${base64Url}" alt="Event Poster">
-            </body>
-            </html>
-            `;
-            const newTab = window.open('about:blank', '_blank');
-            newTab.document.open();
-            newTab.document.write(html);
-            newTab.document.close();
-
-            canvas.remove();
-            image.remove();
-        };
-    };
 
     return (
         <div className='flex flex-col lg:flex-row gap-y-5 lg:items-center p-10 m-12 lg:mx-24 flex-grow rounded-md bg-neutral-500/15 backdrop-blur-3xl'>
@@ -222,16 +167,31 @@ const EventHeader = ({ event, refresh }) => {
                         <FaEdit className="me-3" />
                         Edit Details
                     </button>
+                    <EditEvent
+                        event={event}
+                        isOpen={showEdit}
+                        onClose={async() => {
+                            await refresh(id);
+                            setShowEdit(false)
+                        }}
+                    />
                 </li>
                 {
                     !!image_url && (
-                        <button
-                            onClick={getEventPoster}
-                            className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'
-                        >
-                            <FaFileImage className="me-3" />
-                            Get Poster
-                        </button>
+                        <li>
+                            <button
+                                onClick={() => setShowPoster(true)}
+                                className='flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500'
+                            >
+                                <FaFileImage className="me-3" />
+                                Get Poster
+                            </button>
+                            <GetPoster
+                                event={event}
+                                isOpen={showPoster}
+                                onClose={() => setShowPoster(false)}
+                            />
+                        </li>
                     )
                 }
                 <li>
@@ -279,27 +239,18 @@ const EventHeader = ({ event, refresh }) => {
                                 <FaBan className="me-3 text-lg" />
                                 Cancel Event
                             </button>
+                            <CancelEvent
+                                event={event}
+                                isOpen={showCancel}
+                                onClose={async() => {
+                                    await refresh(id);
+                                    setShowCancel(false)
+                                }}
+                            />
                         </li>
                     ) 
                 }
             </ul>
-
-            <EditEvent
-                event={event}
-                isOpen={showEdit}
-                onClose={async() => {
-                    await refresh(id);
-                    setShowEdit(false)
-                }}
-            />
-            <CancelEvent
-                event={event}
-                isOpen={showCancel}
-                onClose={async() => {
-                    await refresh(id);
-                    setShowCancel(false)
-                }}
-            />
         </div>
     );
 }
