@@ -8,7 +8,7 @@ const CancelEvent = ({ event, isOpen, onClose }) => {
     const onUpdate = async() => {
         // Update event status
         try {
-            const resp = await fetch(`/api/events/status/${event.id}`, {
+            const resp = await fetch(`/api/events/${event.id}/status`, {
                 headers: {
                     'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75",
                     'content-type': 'application/json'
@@ -37,7 +37,7 @@ const CancelEvent = ({ event, isOpen, onClose }) => {
                     if (failedErrors.length > 0) {
                         console.error('Failed to send alerts to the following users: ', failedErrors);
                         alert(
-                            `Failed to send alerts to the following users. Please check the logs for more detail.\n
+                            `Failed to send alerts to the following users. Please check the logs for more details.\n
                             ${failedErrors.map(e => e.username).join('\n')}`
                         );
                     }

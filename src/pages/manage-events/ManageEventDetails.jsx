@@ -1,11 +1,12 @@
 import { Navigate, useParams } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import { useEffect, useState } from "react";
-import { FaBan, FaClock, FaEdit, FaFileImage, FaMap, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
+import { FaBan, FaBell, FaCheck, FaClock, FaEdit, FaFileImage, FaMap, FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
 import EditEvent from "./EditEvent";
 import CancelEvent from "./CancelEvent";
 import EventRegistrations from "./EventRegistrations";
 import GetPoster from "./GetPoster";
+import SendReminders from "./SendReminders";
 
 export default function ManageEventDetails() {
 
@@ -68,7 +69,7 @@ export default function ManageEventDetails() {
 
 const EventHeader = ({ event, refresh }) => {
 
-    const { id, name, description, image_url, start_date, end_date, location, max_registrations, views, interests, status } = event;
+    const { id, name, description, image_url, start_date, end_date, location, max_registrations, views, interests, status, reminder_sent } = event;
 
     const date = new Date(start_date).toLocaleDateString();
     const startTime = new Date(start_date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
@@ -77,11 +78,12 @@ const EventHeader = ({ event, refresh }) => {
     const [ showEdit, setShowEdit ] = useState(false);
     const [ showCancel, setShowCancel ] = useState(false);
     const [ showPoster, setShowPoster ] = useState(false);
+    const [ showReminder, setShowReminder ] = useState(false);
 
     const updateEventStatus = async(status) => {
         // Update event status
         try {
-            const resp = await fetch(`/api/events/status/${id}`, {
+            const resp = await fetch(`/api/events/${id}/status`, {
                 headers: {
                     'api-key': "43d44abf-qlgl-6322-jujw-3b3a9e711f75",
                     'content-type': 'application/json'
@@ -169,53 +171,72 @@ const EventHeader = ({ event, refresh }) => {
                         }}
                     />
                 </li>
-                {
-                    status === 'active' && (
-                        <li>
-                            <button
-                                onClick={() => updateEventStatus('paused')}
-                                className='text-red-500 flex items-center justify-center w-full py-2 px-4 rounded hover:bg-red-500 hover:text-black transition-colors duration-500'
-                            >
-                                <FaRegPauseCircle className="me-3 text-lg" />
-                                Pause registrations
-                            </button>
-                        </li>
-                    )
-                }
-                {
-                    status === 'paused' && (
-                        <li>
-                            <button
-                                onClick={() => updateEventStatus('active')}
-                                className='text-green-500 flex items-center justify-center w-full py-2 px-4 rounded hover:bg-green-500 hover:text-black transition-colors duration-500'
-                            >
-                                <FaRegPlayCircle className="me-3 text-lg" />
-                                Resume registrations
-                            </button>
-                        </li>
-                    )
-                }
-                {
-                    status !== 'cancelled' && (
-                        <li>
-                            <button
-                                onClick={() => setShowCancel(true)}
-                                className='text-red-500 flex items-center justify-center w-full py-2 px-4 rounded hover:bg-red-500 hover:text-black transition-colors duration-500'
-                            >
-                                <FaBan className="me-3 text-lg" />
-                                Cancel Event
-                            </button>
-                            <CancelEvent
-                                event={event}
-                                isOpen={showCancel}
-                                onClose={async() => {
-                                    await refresh(id);
-                                    setShowCancel(false)
-                                }}
-                            />
-                        </li>
-                    ) 
-                }
+                
+                {status !== 'cancelled' && (
+                    <li>
+                        <button
+                            disabled={Boolean(reminder_sent)}
+                            onClick={() => setShowReminder(true)}
+                            className={
+                                `flex items-center justify-center w-full text-white py-2 px-4 rounded hover:bg-white hover:text-black transition-colors duration-500${reminder_sent ? ' pointer-events-none opacity-50' : ''}`
+                            }
+                        >
+                            {
+                                reminder_sent ? <FaCheck className="me-3" /> : <FaBell className="me-3" />
+                            }
+                            { reminder_sent ? 'Reminders sent!' : 'Send Reminders' }
+                        </button>
+                        <SendReminders
+                            event={event}
+                            isOpen={showReminder}
+                            onClose={async() => {
+                                await refresh(id);
+                                setShowReminder(false);
+                            }}
+                        />
+                    </li>
+                )}
+                {status === 'active' && (
+                    <li>
+                        <button
+                            onClick={() => updateEventStatus('paused')}
+                            className='text-red-500 flex items-center justify-center w-full py-2 px-4 rounded hover:bg-red-500 hover:text-black transition-colors duration-500'
+                        >
+                            <FaRegPauseCircle className="me-3 text-lg" />
+                            Pause registrations
+                        </button>
+                    </li>
+                )}
+                {status === 'paused' && (
+                    <li>
+                        <button
+                            onClick={() => updateEventStatus('active')}
+                            className='text-green-500 flex items-center justify-center w-full py-2 px-4 rounded hover:bg-green-500 hover:text-black transition-colors duration-500'
+                        >
+                            <FaRegPlayCircle className="me-3 text-lg" />
+                            Resume registrations
+                        </button>
+                    </li>
+                )}
+                {status !== 'cancelled' && (
+                    <li>
+                        <button
+                            onClick={() => setShowCancel(true)}
+                            className='text-red-500 flex items-center justify-center w-full py-2 px-4 rounded hover:bg-red-500 hover:text-black transition-colors duration-500'
+                        >
+                            <FaBan className="me-3 text-lg" />
+                            Cancel Event
+                        </button>
+                        <CancelEvent
+                            event={event}
+                            isOpen={showCancel}
+                            onClose={async() => {
+                                await refresh(id);
+                                setShowCancel(false)
+                            }}
+                        />
+                    </li>
+                )}
             </ul>
         </div>
     );
