@@ -20,7 +20,35 @@ const CancelEvent = ({ event, isOpen, onClose }) => {
                 })
             });
             if (!resp.ok) throw new Error();
-            await onClose();
+
+            try {
+                const data = await resp.json();
+                // Display errors
+                if (data.alertErrors && Array.isArray(data.alertErrors)) {
+                    const disabledContactErrors = data.alertErrors.filter(e => e.code === 'CONTACT_PREFS_DISABLED');
+                    if (disabledContactErrors.length > 0) {
+                        alert(
+                            `Alert not sent to the following users due to disabled contact preferences.\n
+                            ${disabledContactErrors.map(e => e.username).join('\n')}`
+                        );
+                    }
+
+                    const failedErrors = data.alertErrors.filter(e => e.code === 'SEND_FAILED');
+                    if (failedErrors.length > 0) {
+                        console.error('Failed to send alerts to the following users: ', failedErrors);
+                        alert(
+                            `Failed to send alerts to the following users. Please check the logs for more detail.\n
+                            ${failedErrors.map(e => e.username).join('\n')}`
+                        );
+                    }
+                }
+            }
+            catch(err) {
+                // No error returned
+            }
+            finally {
+                await onClose();
+            }
         } catch(err) {
             console.error(err);
             alert('An error occurred. Please try again later.');

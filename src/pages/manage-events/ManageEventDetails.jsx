@@ -261,6 +261,9 @@ const Registrations = ({ event }) => {
         fetchRegistrations();
     }, [ id ]);
 
+    /**
+     * All registrations after `max_registrations` is considered as waiting list
+     */
     const [ registrations, waitingList ] = useMemo(() => {
         let registrations = data;
         let waitingList = [];
@@ -300,7 +303,7 @@ const Registrations = ({ event }) => {
                             }
                             {
                                 registrations.map((r, i) => (
-                                    <tr key={i} className={i % 2 === 0 ? 'bg-neutral-800' : 'bg-neutral-700'}>
+                                    <tr key={r.id} className={i % 2 === 0 ? 'bg-neutral-800' : 'bg-neutral-700'}>
                                         <td className='text-white py-2 px-4'>{i + 1}</td>
                                         <td className='text-white py-2 px-4'>{r.username}</td>
                                         <td className='text-white py-2 px-4'>{r.email}</td>
@@ -329,8 +332,8 @@ const Registrations = ({ event }) => {
                                 <tbody>
                                     {
                                         waitingList.map((r, i) => (
-                                            <tr key={i} className={i % 2 === 0 ? 'bg-neutral-800' : 'bg-neutral-700'}>
-                                                <td className='text-white py-2 px-4'>{i + 1}</td>
+                                            <tr key={r.id} className={i % 2 === 0 ? 'bg-neutral-800' : 'bg-neutral-700'}>
+                                                <td className='text-white py-2 px-4'>{registrations.length + i + 1}</td>
                                                 <td className='text-white py-2 px-4'>{r.username}</td>
                                                 <td className='text-white py-2 px-4'>{r.email}</td>
                                                 <td className='text-white py-2 px-4'>{r.phone}</td>
