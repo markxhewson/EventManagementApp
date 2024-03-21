@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import registerUser from "../../util/registerUser";
-import { Link } from 'react-router-dom';
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { useAuthContext } from "../../context/AuthContext";
 
@@ -133,12 +132,11 @@ const Signup = () => {
     const hasMinimumLength = (password) => password.length >= 8;
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center h-screen text-gray-600">
-            <div className="max-w-md w-full mx-auto p-6 bg-white rounded-lg shadow-md">
+        <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center w-full text-gray-600">
+            <div className="max-w-md w-full p-6 bg-white mx-auto rounded-lg shadow-md">
                 <h1 className="text-2xl font-semibold text-black">Sign Up</h1>
-                <h1 className="text-base mb-6 text-gray-700">Access one of our many cancer awareness events!</h1>
-                <div className="mb-4">
-                    <label className="block text-gray-700">Username</label>
+                <h1 className="text-base mb-4 text-gray-700">Access one of our many cancer awareness events!</h1>
+                <div className="mb-3">
                     <input
                         type="text"
                         name="username"
@@ -149,9 +147,7 @@ const Signup = () => {
                         required
                     />
                 </div>
-                <div className="mb-4 relative">
-                    <label className="block text-gray-700">Password</label>
-                    <label className="block text-gray-400 text-sm">ex. securePassword123!</label>
+                <div className="mb-3 relative">
                     <input
                         type="password"
                         name="password"
@@ -161,7 +157,7 @@ const Signup = () => {
                         className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md"
                         required
                     />
-                    <div className="absolute inset-y-0 right-0 top-[48px] flex items-center pr-3">
+                    <div className="absolute inset-y-0 right-0 top-0 flex items-center pr-3">
                         {getPasswordStrength(formData.password) ? (
                             <FaCheckCircle className="text-green-500" />
                         ) : (
@@ -170,7 +166,7 @@ const Signup = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-row mb-4 text-[13px]">
+                <div className="flex flex-row mb-3 text-[13px]">
                     <div className="flex flex-col">
                         <h3 className="flex items-center">
                             {hasOneLowerCase(formData.password) ? (
@@ -213,8 +209,7 @@ const Signup = () => {
                 </div>
 
 
-                <div className="mb-4">
-                    <label className="block text-gray-700">Email Address</label>
+                <div className="mb-3">
                     <input
                         type="email"
                         name="email"
@@ -225,23 +220,22 @@ const Signup = () => {
                         required
                     />
                 </div>
-                <div className="mb-6">
+                <div className="mb-3">
                     <label className="block text-gray-700">Phone Number & Area Code</label>
-                    <label className="block text-gray-400 text-sm">ex. +44 7123 456789</label>
+                    <label className="block text-gray-400 text-sm"></label>
                     <input
                         type="tel"
                         name="phone"
                         value={formData.phone}
                         onChange={handlePhoneChange}
-                        placeholder="Phone"
+                        placeholder="e.g. +44 7123 456789"
                         className="p-2 form-input mt-1 block w-full border border-gray-300 rounded-md"
                         required
                     />
                 </div>
                 {/* using similar styling, ask the user if they want their verification code through email or sms with a slider*/}
-                <div className="mb-6">
-                    <label className="block text-gray-700">Receive Verification Code</label>
-                    <label className="block text-gray-400 text-sm pb-1">Choose how you want to receive your verification code</label>
+                <div className="mb-3">
+                    <label className="block text-gray-700">Choose how you want to receive your verification code</label>
                     <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
                             <input type="radio" id="email" name="verification" value="email" className="form-radio" onChange={handleVerificationTypeChange} />
@@ -253,7 +247,7 @@ const Signup = () => {
                         </div>
                     </div>
                 </div>
-                <div className="mb-6">
+                <div className="mb-3">
                     <label className="block text-gray-700">Your Interests</label>
                     <label className="block text-gray-400 text-sm pb-1">Choose the areas you are interested in</label>
                     <div className="flex flex-wrap items-start gap-2">
@@ -265,9 +259,8 @@ const Signup = () => {
                         ))}
                     </div>
                 </div>
-                <div className="flex justify-between">
-                    <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-24" onClick={handleSubmit}>Sign Up</button>
-                    <Link to="/login" className="text-center bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 w-24">Login</Link>
+                <div className="flex justify-start">
+                    <button type="submit" className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 mt-4" onClick={handleSubmit}>Sign Up</button>
                 </div>
             </div>
         </form>

@@ -1,8 +1,6 @@
 import { Route, Routes } from "react-router-dom"
 import Home from "./pages/Home"
 import DefaultSignup from "./pages/auth/DefaultSignup"
-import Signup from "./pages/auth/Signup"
-import Login from "./pages/auth/Login"
 import { useEffect } from "react"
 import AccountDetailsPage from "./pages/account/AccountDetailsPage"
 import Verification from "./pages/auth/Verification"
@@ -75,9 +73,6 @@ function App() {
                         </>
                     ) : (
                         <>
-                            <Route path="/landing" element={<DefaultSignup />} />
-                            <Route path="/signup" element={<Signup />} />
-                            <Route path="/login" element={<Login />} />
                             <Route path="/verification" element={<Verification />} />
                             <Route path="*" element={<DefaultSignup />} />
                         </>

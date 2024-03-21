@@ -97,7 +97,7 @@ const SearchBar = ({ className }) => {
 };
 
 function EventItem({ event }) {
-  const { id, name, image_url, start_date, end_date, location, views, status } = event;
+  const { name, image_url, start_date, end_date, location, views, status } = event;
 
   const date = new Date(start_date).toLocaleDateString();
   const startTime = new Date(start_date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
@@ -105,7 +105,7 @@ function EventItem({ event }) {
 
   return (
     <div className='h-auto rounded-xl transition-transform cursor-pointer relative bg-neutral-800'>
-      <img className='rounded-xl w-96 h-auto object-cover' src={image_url ?? "/img_placeholder.jpg"} alt="Event" />
+      <img className='rounded-xl w-96 h-full object-cover' src={image_url ?? "/img_placeholder.jpg"} alt="Event" />
       <div className={`absolute bottom-0 left-0 w-full bg-black px-2 py-1 ${image_url ? 'bg-opacity-80' : 'bg-opacity-25'}`}>
         <p className={`text-white text-sm text-ellipsis text-nowrap overflow-hidden${status === 'cancelled' ? ' line-through !text-red-500' : ''}`}>{name}</p>
         <p className='text-xs text-neutral-500 text-ellipsis text-nowrap overflow-hidden'>
