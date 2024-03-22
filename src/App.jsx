@@ -63,6 +63,7 @@ function App() {
                             <Route path="/" element={<Home />} />
                             <Route path="event-list" element={<EventList />} />
                             <Route path="/about" element={<About />} />
+                            <Route path="/events" element={<EventList />} />
                             <Route path="/account" element={<AccountDetailsPage />} />
                             <Route path="/verification" element={<Verification />} />
                             <Route path='/manage-events' element={<ManageEvents />} />
