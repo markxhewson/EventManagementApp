@@ -36,6 +36,30 @@ const Home = () => {
     getUserEvents();
   }, []);
 
+  // Function to handle removing event sign-up
+  const handleRemoveSignUp = async (eventId) => {
+    try {
+      const response = await fetch(`/api/registrations/unregister`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': '43d44abf-qlgl-6322-jujw-3b3a9e711f75',
+        },
+        body: JSON.stringify({ userId: user.id, eventId })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to cancel registration');
+      }
+
+      // Filter out the removed event from the events array
+      const updatedEvents = events.filter(e => e.id !== eventId);
+      setEvents(updatedEvents);
+    } catch (error) {
+      console.error('Error cancelling registration:', error);
+    }
+  }
+
   return (
     <>
       <div className={!isLoggedIn || (user && !user.authenticated) ? 'hidden' : 'absolute'}>
@@ -62,7 +86,7 @@ const Home = () => {
                 {events.length === 0 && <p className='text-red-600 mt-3'>You have not signed up for any events!</p>}
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-4">
                   {
-                    events.map((e) => <EventItem key={e.id} event={e} />)
+                    events.map((e) => <EventItem key={e.id} event={e} userId={user.id} handleRemoveSignUp={handleRemoveSignUp} />)
                   }
                 </div>
               </div>
@@ -77,7 +101,7 @@ const Home = () => {
   );
 };
 
-function EventItem({ event }) {
+function EventItem({ event, userId, handleRemoveSignUp }) {
   const { name, image_url, start_date, end_date, location, views, status } = event;
 
   const date = new Date(start_date).toLocaleDateString();
@@ -103,6 +127,16 @@ function EventItem({ event }) {
           <span className='ms-1'>{views}</span>
         </p>
       </div>
+
+      <button
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent event card click propagation
+          handleRemoveSignUp(event.id);
+        }}
+        className="absolute text-sm bottom-2 right-2 hover:scale-105 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg"
+      >
+        X
+      </button>
     </div>
   );
 }

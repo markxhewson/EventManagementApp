@@ -47,9 +47,6 @@ const EventList = () => {
     // Function to handle user signup for an event
     const handleSignUp = async (eventId, userId) => {
         try {
-            // Get the token from localStorage
-            const token = getToken();
-
             // Make a POST request to sign up for the event
             const response = await fetch(`/api/registrations/register`, {
                 method: 'POST',
@@ -61,15 +58,16 @@ const EventList = () => {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to sign up for the event');
+                const error = await response.json();
+                throw new Error(error.error);
             }
 
             // Optionally update the UI after successful sign-up
             // For example, you could show a success message or update the event list
             alert('Successfully signed up for the event!');
         } catch (error) {
-            console.error(error);
-            alert('An error occurred. Please try again later.');
+            if (error) alert(error);
+            else alert('Failed to sign up for the event');
         }
     };
 
@@ -83,8 +81,7 @@ const EventList = () => {
                 {events.map((event) => (
                     <div
                         key={event.id}
-                        className="min-h-[200px] rounded-xl hover:scale-105 transition-transform cursor-pointer relative bg-neutral-800"
-                        onClick={() => handleSignUp(event.id, user.id)} // Handle event click
+                        className="min-h-[200px] rounded-xl transition-transform cursor-pointer relative bg-neutral-800"
                     >
                         <img className='rounded-xl w-full h-full object-cover' src={event.image_url ?? "/img_placeholder.jpg"} alt="Event" />
                         <div className={`absolute bottom-0 left-0 w-full bg-black px-4 py-2 ${event.image_url ? 'bg-opacity-80' : 'bg-opacity-25'}`}>
@@ -98,8 +95,19 @@ const EventList = () => {
                                 <span className='text-sm ms-2'>{event.views}</span>
                             </p>
                         </div>
+                        {/* Signup button */}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation(); // Prevent event card click propagation
+                                handleSignUp(event.id, user.id);
+                            }}
+                            className="absolute bottom-2 right-2 hover:scale-105 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
+                        >
+                            Sign Up
+                        </button>
                     </div>
                 ))}
+
             </div>
         </div>
     );
